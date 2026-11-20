@@ -36,6 +36,30 @@ textarea{min-height:84px;resize:vertical}
   font-family:var(--display);font-weight:700;font-size:19px;flex:none}
 .shopname{font-family:var(--display);font-weight:700;font-size:19px;line-height:1.25}
 .tagline{color:var(--muted);font-size:14px;margin:0 0 16px}
+/* แถบความน่าเชื่อถือ */
+.trust{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin:0 0 16px;
+  display:grid;grid-template-columns:1fr 1fr;gap:9px 12px}
+.trust div{display:flex;gap:8px;align-items:flex-start;font-size:12.8px;line-height:1.45;color:var(--ink)}
+.trust i{font-style:normal;color:var(--brand);flex:none;font-size:14px;line-height:1.3}
+@media (max-width:359px){.trust{grid-template-columns:1fr}}
+/* ตะแกรงสินค้า 2 ช่อง */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:6px}
+.pc{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;
+  flex-direction:column;cursor:pointer;text-align:left;padding:0;color:inherit;width:100%}
+.pc:active{border-color:var(--brand)}
+.pcimg{aspect-ratio:1/1;background:var(--sunk);overflow:hidden}
+.pcimg img{width:100%;height:100%;object-fit:cover;display:block}
+.pcb{padding:9px 10px 10px;display:flex;flex-direction:column;gap:6px;flex:1}
+.pcname{font-size:13.3px;line-height:1.4;font-weight:500;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;min-height:2.8em}
+.pcfoot{display:flex;align-items:center;gap:7px;margin-top:auto}
+.pcprice{font-family:var(--display);font-weight:700;font-size:17px;color:var(--brand);flex:1}
+.pcadd{background:var(--brand);color:#fff;width:32px;height:32px;border-radius:9px;font-size:19px;line-height:1;flex:none}
+.pcq{background:var(--sunk);border-radius:9px;display:flex;align-items:center;gap:2px;flex:none}
+.pcq button{background:transparent;color:var(--ink);width:28px;height:30px;font-size:17px;line-height:1;border-radius:8px}
+.pcq span{font-weight:700;font-size:13px;min-width:16px;text-align:center}
+.sechead{font-family:var(--display);font-weight:700;font-size:16px;margin:2px 0 10px}
+.back{background:transparent;color:var(--muted);font-size:14px;padding:6px 0;margin-bottom:6px}
 .pbig{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
 .pbigimg{aspect-ratio:4/3;background:var(--sunk);overflow:hidden}
 .pbigimg img{width:100%;height:100%;object-fit:cover;display:block}
@@ -169,7 +193,7 @@ function splitAddress(text){
 }
 
 /* ---------- state ---------- */
-var cart = {}, shipIdx = 0, step = 'shop', cust = {name:'',phone:'',addr:''}, payWay = 'pp', billNote = '';
+var cart = {}, shipIdx = 0, step = 'shop', pIdx = 0, cust = {name:'',phone:'',addr:''}, payWay = 'pp', billNote = '';
 var PR = SHOP.products || [], SH = (SHOP.ship && SHOP.ship.length) ? SHOP.ship : [{n:'ค่าส่ง',p:0}];
 
 function lines(){
@@ -233,21 +257,55 @@ function readBill(){
 }
 
 /* ---------- views ---------- */
+/* การ์ดเล็กในตะแกรง 2 ช่อง */
 function card(p, i){
   var q = cart[i] || 0;
-  return '<div class="pbig">' +
-    (p.img ? '<div class="pbigimg"><img src="'+esc(p.img)+'" alt="'+esc(p.name)+'"'+(i < 2 ? ' fetchpriority="high"' : ' loading="lazy"')+'></div>' : '') +
-    '<div class="pbigbody">' +
-      '<div class="pbigname">'+esc(p.name)+'</div>' +
-      (p.note ? '<div class="pbignote">'+esc(p.note)+'</div>' : '') +
-      '<button class="btn-buy" data-buy="'+i+'">สั่งซื้อ <span class="b">'+baht(p.price)+'</span> →</button>' +
-      (q ? '<div class="qty"><button data-dec="'+i+'">−</button><span>'+q+' ชิ้นในตะกร้า</span><button data-inc="'+i+'">+</button></div>'
-         : '<button class="addmore" data-inc="'+i+'">ใส่ตะกร้า ซื้อหลายชิ้น</button>') +
-    '</div></div>';
+  return '<div class="pc" data-open="'+i+'">' +
+    (p.img ? '<div class="pcimg"><img src="'+esc(p.img)+'" alt="'+esc(p.name)+'"'+(i < 4 ? ' fetchpriority="high"' : ' loading="lazy"')+'></div>'
+           : '<div class="pcimg"></div>') +
+    '<div class="pcb"><div class="pcname">'+esc(p.name)+'</div>' +
+      '<div class="pcfoot"><div class="pcprice b">'+baht(p.price)+'</div>' +
+      (q ? '<div class="pcq"><button data-dec="'+i+'">−</button><span>'+q+'</span><button data-inc="'+i+'">+</button></div>'
+         : '<button class="pcadd" data-inc="'+i+'" aria-label="ใส่ตะกร้า">+</button>') +
+      '</div></div></div>';
+}
+/* เหตุผลให้ลูกค้ากล้าสั่ง — ดึงจากข้อมูลร้านจริงเท่านั้น ไม่มีรีวิวปลอม */
+function trustHtml(){
+  var it = [];
+  var free = SH.filter(function(s){ return !Number(s.p); });
+  var paid = SH.filter(function(s){ return Number(s.p) > 0; });
+  if (paid.length) it.push(['🚚','ส่งทั่วไทย ค่าส่งเริ่ม '+baht(Math.min.apply(null, paid.map(function(s){return Number(s.p);})))]);
+  else if (SH.length) it.push(['🚚','ส่งทั่วไทย']);
+  if (free.length) it.push(['🎁', free[0].n]);
+  if (SHOP.cod) it.push(['💵','เก็บเงินปลายทางได้ จ่ายตอนของถึง']);
+  if (SHOP.pp && !SHOP.demo) it.push(['🏦','โอนเข้าบัญชีร้านโดยตรง ไม่ผ่านคนกลาง']);
+  if (SHOP.chat && SHOP.chat.url) it.push(['💬','ถามก่อนสั่งได้ ตอบในแชทร้าน']);
+  (SHOP.trust || []).forEach(function(t){ it.push(['✅', t]); });
+  if (!it.length) return '';
+  return '<div class="trust">' + it.map(function(x){
+    return '<div><i>'+x[0]+'</i><span>'+esc(x[1])+'</span></div>'; }).join('') + '</div>';
 }
 function viewShop(){
-  return '<p class="tagline">'+esc(SHOP.tagline||'')+'</p>' +
-    PR.map(card).join('') + footer();
+  return (SHOP.tagline ? '<p class="tagline">'+esc(SHOP.tagline)+'</p>' : '') +
+    trustHtml() +
+    '<div class="sechead">สินค้าทั้งหมด '+PR.length+' อย่าง</div>' +
+    '<div class="grid">' + PR.map(card).join('') + '</div>' + footer();
+}
+/* หน้ารายละเอียดสินค้า */
+function viewProduct(i){
+  var p = PR[i]; if (!p) { step='shop'; return viewShop(); }
+  var q = cart[i] || 0;
+  return '<button class="back" data-a="back">← กลับไปดูสินค้าอื่น</button>' +
+    '<div class="pbig">' +
+    (p.img ? '<div class="pbigimg"><img src="'+esc(p.img)+'" alt="'+esc(p.name)+'" fetchpriority="high"></div>' : '') +
+    '<div class="pbigbody">' +
+      '<div class="pbigname">'+esc(p.name)+'</div>' +
+      '<div class="pcprice b" style="font-size:24px">'+baht(p.price)+'</div>' +
+      (p.note ? '<div class="pbignote">'+esc(p.note)+'</div>' : '') +
+      '<button class="btn-buy" data-buy="'+i+'">สั่งซื้อเลย <span class="b">'+baht(p.price)+'</span> →</button>' +
+      (q ? '<div class="qty"><button data-dec="'+i+'">−</button><span>'+q+' ชิ้นในตะกร้า</span><button data-inc="'+i+'">+</button></div>'
+         : '<button class="addmore" data-inc="'+i+'">ใส่ตะกร้า ซื้อหลายชิ้น</button>') +
+    '</div></div>' + trustHtml() + footer();
 }
 function receipt(){
   var h = '';
@@ -372,10 +430,10 @@ function render(){
     foot = lines().length ? '<button class="btn-main" data-a="copybill">📋 คัดลอกบิล ไปวางในแชท</button>'
                           : '<button class="btn-main" disabled>เลือกสินค้าที่ลูกค้าสั่ง</button>';
   }
-  else if (step === 'shop'){
-    body = viewShop();
+  else if (step === 'shop' || step === 'p'){
+    body = step === 'p' ? viewProduct(pIdx) : viewShop();
     foot = lines().length ? '<button class="btn-main" data-a="go">สั่งซื้อ · '+baht(total())+'</button>'
-                          : '<div class="small muted" style="padding:6px 2px">เลือกสินค้าใส่ตะกร้าได้เลย</div>';
+                          : '<div class="small muted" style="padding:6px 2px">แตะที่สินค้าเพื่อดูรายละเอียด หรือกด + ใส่ตะกร้า</div>';
   }
   else if (step === 'addr'){
     body = viewAddr();
@@ -404,8 +462,11 @@ function openChat(){
 }
 
 document.addEventListener('click', function(ev){
-  var t = ev.target.closest('[data-buy],[data-inc],[data-dec],[data-a]');
+  var t = ev.target.closest('[data-buy],[data-inc],[data-dec],[data-a],[data-open]');
   if (!t) return;
+  if (t.hasAttribute('data-open')){
+    pIdx = +t.getAttribute('data-open'); step = 'p'; render(); window.scrollTo(0,0); return;
+  }
   if (t.hasAttribute('data-buy')){
     var i = +t.getAttribute('data-buy');
     if (!cart[i]) cart[i] = 1;
