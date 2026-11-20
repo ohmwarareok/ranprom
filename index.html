@@ -101,6 +101,15 @@ details p{margin:10px 0 0;color:var(--muted);font-size:14.3px}
 .final p{margin:0 0 18px;opacity:.92;font-size:15px}
 .final .btn-g{background:#fff;border-color:#fff}
 footer{text-align:center;color:var(--muted);font-size:13px;padding:30px 0 40px}
+.hl{background:var(--surface);border:2px solid var(--brand);border-radius:var(--r);padding:20px;margin-top:4px}
+.hl .tag{display:inline-block;background:var(--brand);color:#fff;border-radius:999px;
+  padding:4px 12px;font-size:12.5px;font-weight:600;margin-bottom:10px}
+.hl h3{font-family:var(--display);font-weight:700;font-size:19px;margin:0 0 8px;line-height:1.3}
+.hl p{margin:0 0 12px}
+.hl .steps{display:grid;gap:9px;margin:0 0 12px}
+.hl .steps div{display:flex;gap:10px;align-items:flex-start;font-size:14.5px}
+.hl .steps i{font-style:normal;flex:none}
+.hl .fine{background:var(--sunk);border-radius:12px;padding:12px;font-size:13px;color:var(--muted);line-height:1.55;margin:0}
 /* แถบลองฟอนต์ — โชว์เฉพาะตอนต่อท้าย URL ว่า #fonts (ลูกค้าทั่วไปไม่เห็น) */
 #fontbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:50;background:#161c19;color:#fff;
   padding:10px max(12px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom));
@@ -170,8 +179,27 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:30px 0 40px}
   </section>
 
   <section>
+    <h2 class="sh">ตัวจับสลิปปลอม — อันนี้เจ้าอื่นไม่มีให้</h2>
+    <p class="sd">สลิปปลอมกับสลิปเก่าส่งซ้ำ คือเรื่องที่แม่ค้าโดนกันทุกคน</p>
+    <div class="hl">
+      <span class="tag">มีให้ในร้านทุกร้าน ไม่คิดเพิ่ม</span>
+      <h3>ลูกค้าส่งสลิปมา แตะทีเดียวรู้เลย</h3>
+      <p>สลิปจริงจากแอปธนาคารจะมี QR เล็ก ๆ อยู่บนสลิปเสมอ ข้างในมีเลขอ้างอิงของรายการโอน ระบบอ่านตัวนั้นให้</p>
+      <div class="steps">
+        <div><i>🚨</i><span><b>สลิปเก่าเอามาส่งซ้ำ</b> — เลขอ้างอิงซ้ำกับที่เคยรับไปแล้ว ระบบเตือนทันที</span></div>
+        <div><i>🚨</i><span><b>รูปที่ไม่ใช่สลิปธนาคาร</b> — รูปที่ทำขึ้นเองมักไม่มี QR นี้ หรือมีแต่ไม่ตรงรูปแบบของธนาคาร</span></div>
+        <div><i>✅</i><span><b>บอกธนาคารผู้โอนกับเลขอ้างอิงจริง</b> — เอาไปเช็กในแอปธนาคารต่อได้เลย</span></div>
+      </div>
+      <p class="fine"><b>บอกตรง ๆ ว่าทำอะไรไม่ได้:</b> ระบบไม่ได้ต่อกับธนาคาร จึงไม่ได้ยืนยันว่าเงินเข้าบัญชีแล้วจริง
+      ยอดเงินยังต้องเช็กในแอปธนาคารเองเสมอ สิ่งที่ได้คือจับสลิปซ้ำกับรูปปลอมได้ตั้งแต่ก่อนแพ็กของ
+      และรายการสลิปเก็บอยู่ในเครื่องคุณเท่านั้น ไม่ได้ส่งออกไปไหน</p>
+    </div>
+  </section>
+
+  <section>
     <h2 class="sh">ได้อะไรบ้าง</h2>
     <div class="inc">
+      <div><i>✓</i><span><b>ตัวเช็กสลิป กันสลิปปลอมและสลิปส่งซ้ำ</b></span></div>
       <div><i>✓</i><span>หน้าร้านเป็นลิงก์ถาวรของคุณเอง เปิดได้ทุกเครื่อง</span></div>
       <div><i>✓</i><span>เลือกหน้าตาได้ 4 แบบ ตามของที่ขาย</span></div>
       <div><i>✓</i><span><b>QR พร้อมเพย์ของร้านคุณ ฝังยอดมาให้แล้ว</b> ลูกค้าไม่ต้องพิมพ์เลข</span></div>

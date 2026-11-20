@@ -118,6 +118,25 @@ textarea{min-height:84px;resize:vertical}
 .foot{text-align:center;color:var(--muted);font-size:12px;padding:22px 0 0}
 .foot a{color:var(--muted)}
 .chip{display:inline-block;background:var(--sunk);border-radius:999px;padding:3px 10px;font-size:12px;margin-right:6px}
+/* ---- เช็กสลิป ---- */
+.drop{position:relative;border:2px dashed var(--line);border-radius:14px;background:var(--sunk);
+  padding:26px 14px;text-align:center;color:var(--muted);font-size:14px;line-height:1.5;cursor:pointer}
+.drop.hot{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 8%,var(--sunk))}
+.drop input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;padding:0;border:0}
+.drop b{color:var(--ink)}
+.vd{border-radius:14px;padding:14px;margin-top:12px;border:1px solid}
+.vd .vt{font-family:var(--display);font-weight:700;font-size:17px;line-height:1.3;margin-bottom:4px}
+.vd .vs{font-size:13.5px;line-height:1.55}
+.vd.good{background:#e9f7f0;border-color:#b6e0cd;color:#0c5438}
+.vd.bad{background:#fdeaea;border-color:#f3bfbf;color:#8a1c1c}
+.vd.warn{background:var(--warn-bg);border-color:var(--warn-line);color:var(--warn-ink)}
+.kv{display:flex;gap:10px;font-size:13.5px;padding:5px 0;border-top:1px dashed rgba(0,0,0,.14)}
+.kv .k{opacity:.75;flex:none;min-width:92px}
+.kv .v{font-weight:600;word-break:break-all}
+.slog{font-size:13px;padding:9px 0;border-top:1px solid var(--line);display:flex;gap:9px;align-items:baseline}
+.slog .r{font-weight:600;word-break:break-all;flex:1}
+.slog .d{color:var(--muted);font-size:12px;flex:none}
+.sbusy{text-align:center;color:var(--muted);font-size:14px;padding:16px}
 </style>
 </head>
 <body>
@@ -433,6 +452,7 @@ function viewAdmin(){
     return '<label><input type="radio" name="sh" value="'+i+'"'+(i===shipIdx?' checked':'')+'><span>'+esc(s.n)+'</span>'+
       '<span class="p">'+(Number(s.p)>0?baht(s.p):'ฟรี')+'</span></label>'; }).join('');
   var h = '<div class="note">หน้านี้สำหรับเจ้าของร้าน — เลือกของที่ลูกค้าสั่ง แล้วส่งลิงก์บิลให้เขาจ่าย ลูกค้าไม่เห็นหน้านี้</div>';
+  h += '<button class="btn-line" data-a="slip" style="width:100%;margin-bottom:12px">🧾 เช็กสลิปที่ลูกค้าส่งมา (กันสลิปปลอม/ส่งซ้ำ)</button>';
   h += '<div class="card">'+list+'</div>';
   h += '<div class="card ship"><div class="h">ค่าส่ง</div>'+shipHtml+'</div>';
   h += '<div class="card"><label class="f">โน้ตถึงลูกค้า (ไม่ใส่ก็ได้)<input id="bnote" value="'+esc(billNote)+'"></label>'+receipt()+'</div>';
@@ -456,6 +476,168 @@ function footer(){
     '<span class="small">เงินโอนเข้าบัญชีร้านโดยตรง ไม่ผ่านคนกลาง</span></div>';
 }
 
+/* ---------- เช็กสลิป ----------
+   ไม่ได้ต่อกับธนาคาร แต่อ่าน QR เล็กบนสลิปซึ่งมีเลขอ้างอิงจริงของรายการโอน
+   จับได้: (1) สลิปเก่าเอามาใช้ซ้ำ  (2) รูปที่ไม่มี/ไม่ใช่ QR สลิปธนาคาร        */
+var BANKS = {'002':'กรุงเทพ','004':'กสิกรไทย','006':'กรุงไทย','011':'ทีทีบี','014':'ไทยพาณิชย์',
+  '017':'ซิตี้แบงก์','020':'สแตนดาร์ดชาร์เตอร์ด','022':'ซีไอเอ็มบี','024':'ยูโอบี','025':'กรุงศรีอยุธยา',
+  '030':'ออมสิน','033':'อาคารสงเคราะห์','034':'ธ.ก.ส.','039':'เมกะสากลพาณิชย์','045':'บีเอ็นพี',
+  '052':'แบงก์ออฟไชน่า','066':'อิสลามแห่งประเทศไทย','067':'ทิสโก้','069':'เกียรตินาคินภัทร',
+  '070':'ไอซีบีซี','071':'ไทยเครดิต','073':'แลนด์ แอนด์ เฮ้าส์','098':'เอสเอ็มอี'};
+
+function tlvRead(s){
+  var out = {}, i = 0;
+  while (i + 4 <= s.length){
+    var tag = s.slice(i,i+2), lenS = s.slice(i+2,i+4);
+    if (!/^\d{2}$/.test(lenS)) return null;
+    var len = parseInt(lenS,10), val = s.slice(i+4, i+4+len);
+    if (val.length < len) return null;
+    out[tag] = val; i += 4 + len;
+  }
+  return i === s.length ? out : null;
+}
+function slipCrcOk(p){
+  var k = p.lastIndexOf('9104');
+  if (k < 0) return -1;
+  var want = crc16(p.slice(0, k+4)), got = p.slice(k+4);
+  if (got.toUpperCase() === want) return k;
+  /* บางแอปตัดเลขศูนย์หน้าของ CRC ทิ้ง */
+  if (got.length > 0 && got.length < 4 && got.toUpperCase().padStart(4,'0') === want) return k;
+  return -1;
+}
+function parseSlip(payload){
+  var p = String(payload||'').trim().replace(/\s+/g,'');
+  if (p.length < 14 || p.slice(0,2) !== '00') return null;
+  var k = slipCrcOk(p);
+  if (k < 0) return null;
+  var top = tlvRead(p.slice(0, k));
+  if (!top || !top['00']) return null;
+  var sub = tlvRead(top['00']);
+  if (!sub) return null;
+  if (sub['00'] === '000001' && sub['02'])
+    return {kind:'bank', bank:(sub['01']||''), ref:sub['02']};
+  if (sub['00'] === '01' && sub['01'] === '01' && sub['03'])
+    return {kind:'truemoney', bank:'', ref:sub['03'], date:(sub['04']||'')};
+  return null;
+}
+function bankName(code){ return BANKS[code] ? ('ธ.' + BANKS[code]) : (code ? ('รหัสธนาคาร ' + code) : ''); }
+
+var SKEY = 'rp_slip_' + location.pathname.replace(/[^a-z0-9]+/gi,'_');
+function slipDb(){ try { return JSON.parse(localStorage.getItem(SKEY) || '[]') || []; } catch(e){ return []; } }
+function slipPut(rec){
+  try { var d = slipDb(); d.push(rec); localStorage.setItem(SKEY, JSON.stringify(d.slice(-400))); } catch(e){}
+}
+function slipFind(ref){ var d = slipDb(); for (var i=d.length-1;i>=0;i--) if (d[i].ref === ref) return d[i]; return null; }
+function thDate(ts){
+  var d = new Date(ts);
+  return d.toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit'}) + ' ' +
+         d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
+}
+
+var jsqrP = null;
+function loadJsQR(){
+  if (window.jsQR) return Promise.resolve(true);
+  if (!jsqrP) jsqrP = new Promise(function(res){
+    var s = document.createElement('script');
+    s.src = '../lib/jsQR.min.js';
+    s.onload = function(){ res(!!window.jsQR); };
+    s.onerror = function(){ jsqrP = null; res(false); };
+    document.head.appendChild(s);
+  });
+  return jsqrP;
+}
+function readQrFromImage(file){
+  return loadJsQR().then(function(ok){
+    if (!ok) return Promise.reject(new Error('โหลดตัวอ่าน QR ไม่ได้ ลองเช็กเน็ตแล้วลองใหม่'));
+    return new Promise(function(res, rej){
+      var img = new Image(), url = URL.createObjectURL(file);
+      img.onload = function(){
+        URL.revokeObjectURL(url);
+        var hit = null;
+        [1, 2, 1.5, 0.6, 3].some(function(k){
+          var w = Math.max(1, Math.round(img.width*k)), h = Math.max(1, Math.round(img.height*k));
+          if (w*h > 2.4e7) return false;
+          var c = document.createElement('canvas'); c.width = w; c.height = h;
+          var x = c.getContext('2d', {willReadFrequently:true});
+          x.drawImage(img, 0, 0, w, h);
+          var r = window.jsQR(x.getImageData(0,0,w,h).data, w, h, {inversionAttempts:'attemptBoth'});
+          if (r && r.data){ hit = r.data; return true; }
+          return false;
+        });
+        res(hit);
+      };
+      img.onerror = function(){ URL.revokeObjectURL(url); rej(new Error('เปิดรูปนี้ไม่ได้')); };
+      img.src = url;
+    });
+  });
+}
+
+var slipS = {busy:false, err:'', info:null, dup:null, got:false, raw:''};
+function slipReset(){ slipS = {busy:false, err:'', info:null, dup:null, got:false, raw:''}; }
+function slipCheckText(payload){
+  slipS.busy = false; slipS.err = ''; slipS.got = true; slipS.raw = payload || '';
+  slipS.info = parseSlip(payload);
+  slipS.dup = slipS.info ? slipFind(slipS.info.ref) : null;
+  render();
+}
+function slipCheckFile(file){
+  if (!file) return;
+  slipReset(); slipS.busy = true; render();
+  readQrFromImage(file).then(function(data){
+    if (!data){ slipS.busy = false; slipS.got = true; slipS.info = null; slipS.raw = ''; render(); return; }
+    slipCheckText(data);
+  }).catch(function(e){
+    slipS.busy = false; slipS.err = e.message || 'อ่านรูปไม่สำเร็จ'; render();
+  });
+}
+function slipVerdict(){
+  if (slipS.busy) return '<div class="sbusy">⏳ กำลังอ่าน QR บนสลิป…</div>';
+  if (slipS.err) return '<div class="vd warn"><div class="vt">⚠️ '+esc(slipS.err)+'</div></div>';
+  if (!slipS.got) return '';
+  var i = slipS.info;
+  if (!i) return '<div class="vd bad"><div class="vt">🚨 ไม่ใช่สลิปธนาคารจริง (หรืออ่าน QR ไม่ออก)</div>'+
+    '<div class="vs">สลิปจริงจากแอปธนาคารจะมี QR เล็ก ๆ อยู่บนสลิปเสมอ ถ้าไม่เจอ ให้ขอให้ลูกค้าส่งสลิปเต็ม ๆ ที่ไม่ถูกครอบตัด '+
+    'ไม่ย่อจนเบลอ และเป็นภาพจากแอปธนาคารโดยตรง — ถ้าส่งเต็มแล้วยังไม่เจอ ให้สงสัยไว้ก่อน</div></div>';
+  var rows = '<div class="kv"><span class="k">เลขอ้างอิง</span><span class="v">'+esc(i.ref)+'</span></div>';
+  if (i.kind === 'truemoney') rows += '<div class="kv"><span class="k">ช่องทาง</span><span class="v">ทรูมันนี่ วอลเล็ท</span></div>';
+  else rows += '<div class="kv"><span class="k">ธนาคารผู้โอน</span><span class="v">'+esc(bankName(i.bank) || '—')+'</span></div>';
+  if (i.date && i.date.length === 8)
+    rows += '<div class="kv"><span class="k">วันที่โอน</span><span class="v">'+esc(i.date.slice(0,2)+'/'+i.date.slice(2,4)+'/'+i.date.slice(4))+'</span></div>';
+  if (slipS.dup){
+    return '<div class="vd bad"><div class="vt">🚨 สลิปนี้เคยใช้แล้ว</div>'+
+      '<div class="vs">มึงเคยบันทึกสลิปใบนี้ไว้เมื่อ <b>'+esc(thDate(slipS.dup.at))+'</b>'+
+      (slipS.dup.amt ? ' ยอด <b>'+baht(slipS.dup.amt)+'</b>' : '')+
+      (slipS.dup.note ? ' ('+esc(slipS.dup.note)+')' : '')+
+      ' — เป็นการเอาสลิปเก่ามาส่งซ้ำ อย่าเพิ่งส่งของ</div>'+rows+'</div>';
+  }
+  return '<div class="vd good"><div class="vt">✅ สลิปจริง และยังไม่เคยใช้</div>'+
+    '<div class="vs">QR บนสลิปถูกต้องตามรูปแบบของธนาคาร และเลขอ้างอิงนี้ยังไม่เคยถูกบันทึกในร้านนี้ '+
+    '<b>อย่าลืมเช็กยอดเงินกับเวลาในสลิปให้ตรงกับบิลด้วย</b> แล้วกดบันทึกไว้กันส่งซ้ำ</div>'+rows+
+    '<label class="f" style="margin-top:10px">ยอดที่โอนมา (ใส่ไว้กันลืม)<input id="samt" inputmode="numeric" placeholder="เช่น 540"></label>'+
+    '<button class="btn-line" data-a="sslip" style="width:100%;margin-top:8px">บันทึกว่าใช้สลิปใบนี้แล้ว</button></div>';
+}
+function viewSlip(){
+  var h = '<div class="note"><b>เช็กสลิปก่อนส่งของ</b> — ระบบอ่าน QR เล็ก ๆ บนสลิป ซึ่งมีเลขอ้างอิงจริงของรายการโอนอยู่ '+
+          'จับได้ 2 อย่าง: <b>สลิปเก่าเอามาส่งซ้ำ</b> และ <b>รูปที่ไม่ใช่สลิปธนาคาร</b> · '+
+          'ระบบนี้ไม่ได้ต่อกับธนาคาร จึงไม่ได้ยืนยันว่าเงินเข้าบัญชีแล้ว ยอดเงินต้องเช็กในแอปธนาคารเองเสมอ</div>';
+  h += '<div class="card"><div class="h">ใส่สลิปที่ลูกค้าส่งมา</div>'+
+       '<div class="drop" id="drop"><b>แตะเพื่อเลือกรูปสลิป</b><br>หรือวาง (Ctrl+V) หรือลากรูปมาทิ้งตรงนี้'+
+       '<input type="file" id="sfile" accept="image/*"></div>'+
+       '<label class="f" style="margin-top:12px">หรือวางข้อความจาก QR เอง (ไม่ต้องใส่ก็ได้)'+
+       '<input id="sraw" placeholder="00400006000001..."></label>'+
+       '<button class="btn-line" data-a="srawgo" style="width:100%;margin-top:8px">ตรวจจากข้อความ</button></div>';
+  h += slipVerdict();
+  var db = slipDb();
+  if (db.length){
+    var rows = db.slice(-12).reverse().map(function(r){
+      return '<div class="slog"><span class="r">'+esc(r.ref)+(r.amt?' · '+baht(r.amt):'')+'</span>'+
+             '<span class="d">'+esc(thDate(r.at))+'</span></div>'; }).join('');
+    h += '<div class="card"><div class="h">สลิปที่บันทึกไว้ ('+db.length+')</div>'+rows+
+         '<div class="small muted" style="margin-top:8px">เก็บไว้ในเครื่องนี้เท่านั้น ไม่ได้ส่งออกไปไหน · เปลี่ยนเครื่องหรือล้างข้อมูลเบราว์เซอร์แล้วรายการนี้จะหาย</div></div>';
+  }
+  return h + footer();
+}
+
 /* ---------- render ---------- */
 var lastNo = '';
 function render(){
@@ -469,6 +651,10 @@ function render(){
     body = viewAdmin();
     foot = lines().length ? '<button class="btn-main" data-a="copybill">📋 คัดลอกบิล ไปวางในแชท</button>'
                           : '<button class="btn-main" disabled>เลือกสินค้าที่ลูกค้าสั่ง</button>';
+  }
+  else if (step === 'slip'){
+    body = viewSlip();
+    foot = '<button class="btn-line" data-a="badmin" style="width:100%">← กลับหน้าเจ้าของร้าน</button>';
   }
   else if (step === 'shop' || step === 'p'){
     body = step === 'p' ? viewProduct(pIdx) : viewShop();
@@ -538,11 +724,50 @@ document.addEventListener('click', function(ev){
   }
   if (a === 'copybill'){ readForm(); copyText(billText()); t.textContent = '✓ คัดลอกแล้ว ไปวางในแชท'; return; }
   if (a === 'chat'){ openChat(); return; }
+  if (a === 'slip'){ readForm(); slipReset(); step = 'slip'; render(); window.scrollTo(0,0); return; }
+  if (a === 'badmin'){ step = 'admin'; render(); window.scrollTo(0,0); return; }
+  if (a === 'srawgo'){
+    var rb = document.getElementById('sraw');
+    if (rb && rb.value.trim()) slipCheckText(rb.value.trim());
+    return;
+  }
+  if (a === 'sslip'){
+    if (!slipS.info) return;
+    var am = document.getElementById('samt');
+    slipPut({ref: slipS.info.ref, bank: slipS.info.bank || '', at: Date.now(),
+             amt: am && am.value ? Number(String(am.value).replace(/[^\d.]/g,'')) || 0 : 0, note: ''});
+    slipS.dup = slipFind(slipS.info.ref);
+    render(); window.scrollTo(0,0);
+    return;
+  }
+});
+/* วางรูปสลิป / ลากมาทิ้ง — ทำงานเฉพาะหน้าเช็กสลิป */
+document.addEventListener('paste', function(ev){
+  if (step !== 'slip' || !ev.clipboardData) return;
+  var it = ev.clipboardData.items || [];
+  for (var i=0;i<it.length;i++){
+    if (it[i].type && it[i].type.indexOf('image') === 0){
+      var f = it[i].getAsFile();
+      if (f){ ev.preventDefault(); slipCheckFile(f); return; }
+    }
+  }
+});
+['dragenter','dragover','dragleave','drop'].forEach(function(evn){
+  document.addEventListener(evn, function(ev){
+    if (step !== 'slip') return;
+    var d = document.getElementById('drop'); if (!d) return;
+    ev.preventDefault();
+    if (evn === 'dragenter' || evn === 'dragover') d.classList.add('hot');
+    else d.classList.remove('hot');
+    if (evn === 'drop' && ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0])
+      slipCheckFile(ev.dataTransfer.files[0]);
+  });
 });
 document.addEventListener('change', function(ev){
   var n = ev.target.name;
   if (n === 'sh'){ readForm(); shipIdx = +ev.target.value; render(); }
   if (n === 'pw'){ readForm(); payWay = ev.target.value; render(); }
+  if (ev.target.id === 'sfile' && ev.target.files && ev.target.files[0]) slipCheckFile(ev.target.files[0]);
 });
 window.addEventListener('hashchange', function(){ boot(); });
 
@@ -551,6 +776,7 @@ function boot(){
   cart = {}; shipIdx = 0;
   if (readBill()) step = 'bill';
   else if (location.hash === '#admin') step = 'admin';
+  else if (location.hash === '#slip'){ slipReset(); step = 'slip'; }
   else step = 'shop';
   render();
 }
