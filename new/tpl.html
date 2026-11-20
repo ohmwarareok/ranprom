@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>__TITLE__</title>
+<meta name="description" content="__DESC__">
+<meta property="og:title" content="__TITLE__">
+<meta property="og:description" content="__DESC__">
+<meta property="og:type" content="website">
+<meta property="og:image" content="__OGIMG__">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#0e8a5f; --brand-dark:#0a6e4b; --on-brand:#fff;
+  --accent:#e09200; --pp:#1b3a8f;
+  --bg:#f4f5f3; --surface:#fff; --sunk:#f0f1ef;
+  --ink:#161c19; --muted:#6a7470; --line:#e2e5e2;
+  --r:16px; --display:'Bai Jamjuree',sans-serif; --body:'IBM Plex Sans Thai',sans-serif;
+  --payg:linear-gradient(170deg,#23489f,#16306f); --on-pay:#fff;
+  --warn-bg:#fff8e6; --warn-line:#f0dfb0; --warn-ink:#6a4e05;
+  --pad:max(16px, env(safe-area-inset-left));
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55;
+  -webkit-text-size-adjust:100%;overflow-x:hidden}
+img{max-width:100%}
+button{font-family:inherit;cursor:pointer;border:0;border-radius:12px}
+input,textarea,select{font-family:inherit;font-size:16px;width:100%;padding:12px 13px;border:1px solid var(--line);
+  border-radius:12px;background:var(--surface);color:var(--ink)}
+textarea{min-height:84px;resize:vertical}
+.wrap{max-width:560px;margin:0 auto;padding:0 var(--pad) 120px}
+.top{display:flex;align-items:center;gap:11px;padding:16px 0 12px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.logo{width:40px;height:40px;border-radius:11px;background:var(--brand);color:#fff;display:grid;place-items:center;
+  font-family:var(--display);font-weight:700;font-size:19px;flex:none}
+.shopname{font-family:var(--display);font-weight:700;font-size:19px;line-height:1.25}
+.tagline{color:var(--muted);font-size:14px;margin:0 0 16px}
+/* แถบความน่าเชื่อถือ */
+.trust{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin:0 0 16px;
+  display:grid;grid-template-columns:1fr 1fr;gap:9px 12px}
+.trust div{display:flex;gap:8px;align-items:flex-start;font-size:12.8px;line-height:1.45;color:var(--ink)}
+.trust i{font-style:normal;color:var(--brand);flex:none;font-size:14px;line-height:1.3}
+@media (max-width:359px){.trust{grid-template-columns:1fr}}
+/* ตะแกรงสินค้า 2 ช่อง */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:6px}
+.pc{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;
+  flex-direction:column;cursor:pointer;text-align:left;padding:0;color:inherit;width:100%}
+.pc:active{border-color:var(--brand)}
+.pcimg{aspect-ratio:1/1;background:var(--sunk);overflow:hidden}
+.pcimg img{width:100%;height:100%;object-fit:cover;display:block}
+.pcb{padding:9px 10px 10px;display:flex;flex-direction:column;gap:6px;flex:1}
+.pcname{font-size:13.3px;line-height:1.4;font-weight:500;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;min-height:2.8em}
+.pcfoot{display:flex;align-items:center;gap:7px;margin-top:auto}
+.pcprice{font-family:var(--display);font-weight:700;font-size:17px;color:var(--brand);flex:1}
+.pcadd{background:var(--brand);color:#fff;width:32px;height:32px;border-radius:9px;font-size:19px;line-height:1;flex:none}
+.pcq{background:var(--sunk);border-radius:9px;display:flex;align-items:center;gap:2px;flex:none}
+.pcq button{background:transparent;color:var(--ink);width:28px;height:30px;font-size:17px;line-height:1;border-radius:8px}
+.pcq span{font-weight:700;font-size:13px;min-width:16px;text-align:center}
+.sechead{font-family:var(--display);font-weight:700;font-size:16px;margin:2px 0 10px}
+.back{background:transparent;color:var(--muted);font-size:14px;padding:6px 0;margin-bottom:6px}
+.pbig{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+.pbigimg{aspect-ratio:4/3;background:var(--sunk);overflow:hidden}
+.pbigimg img{width:100%;height:100%;object-fit:cover;display:block}
+.pbigbody{padding:14px 15px 15px;display:flex;flex-direction:column;gap:7px}
+.pbigname{font-family:var(--display);font-weight:700;font-size:18px;line-height:1.3}
+.pbignote{font-size:13.5px;color:var(--muted);line-height:1.5}
+.btn-buy{background:var(--brand);color:var(--on-brand);width:100%;display:flex;align-items:center;justify-content:center;
+  gap:9px;font-family:var(--display);font-weight:700;font-size:16.5px;padding:14px 16px;margin-top:4px}
+.btn-buy:active{background:var(--brand-dark)}
+.b{font-variant-numeric:tabular-nums}
+.addmore{background:transparent;color:var(--muted);font-size:13px;padding:4px;text-decoration:underline;align-self:center}
+.qty{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--sunk);border-radius:12px;padding:5px;margin-top:4px}
+.qty button{background:var(--surface);border:1px solid var(--line);padding:9px 16px;font-size:17px;line-height:1}
+.qty span{font-weight:600}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:15px;margin-bottom:14px}
+.h{font-family:var(--display);font-weight:700;font-size:17px;margin:0 0 10px}
+.f{display:block;margin-bottom:12px;font-size:13px;color:var(--muted);font-weight:500}
+.f input,.f textarea{margin-top:5px}
+.row{display:flex;align-items:center;gap:10px;padding:9px 0}
+.row+.row{border-top:1px solid var(--line)}
+.row .n{flex:1;font-size:14.5px}
+.tot{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid var(--ink);margin-top:8px;padding-top:10px}
+.tot .v{font-family:var(--display);font-weight:700;font-size:22px}
+.pay{background:var(--payg);color:var(--on-pay);border-radius:var(--r);padding:18px 15px;text-align:center;margin-bottom:14px}
+.pay .amt{font-family:var(--display);font-weight:700;font-size:34px;line-height:1.1;margin:2px 0 14px}
+.pay .lbl{font-size:13px;opacity:.85}
+.qrbox{background:#fff;border-radius:12px;padding:12px;display:inline-block;max-width:100%}
+.qrdemo{background:#fff;color:#5b6360;border:2px dashed #b9c0bc;border-radius:12px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;width:min(260px,66vw);min-height:min(260px,66vw);margin:0 auto;text-align:center}
+.qrdemo .big{font-size:34px;line-height:1}
+.qrdemo .t{font-weight:700;font-size:14px}
+.qrdemo .s{font-size:12.5px;line-height:1.55}
+.demobar{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink);border-radius:12px;padding:11px 13px;margin:0 0 14px;font-size:13px;line-height:1.6}
+.demobar b{color:inherit}
+.qrbox svg{display:block;width:min(260px,66vw);height:auto}
+.hint{font-size:12.5px;opacity:.85;margin-top:12px;line-height:1.6}
+.ship label{display:flex;align-items:center;gap:10px;padding:11px 0;font-size:14.5px;cursor:pointer}
+.ship label+label{border-top:1px solid var(--line)}
+.ship input{width:auto;flex:none}
+.ship .p{margin-left:auto;font-weight:600}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);
+  padding:10px var(--pad) max(10px,env(safe-area-inset-bottom));display:flex;gap:9px;align-items:center;z-index:9}
+.bar .inner{max-width:560px;margin:0 auto;width:100%;display:flex;gap:9px;align-items:center}
+.btn-main{background:var(--brand);color:#fff;font-family:var(--display);font-weight:700;font-size:16px;padding:14px 16px;flex:1}
+.btn-main:disabled{background:#c4cdc8;cursor:default}
+.btn-line{background:var(--surface);border:1px solid var(--line);color:var(--ink);font-weight:600;font-size:14px;padding:13px 14px}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.ok{text-align:center;padding:36px 16px}
+.ok .tick{width:62px;height:62px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;
+  font-size:31px;margin:0 auto 14px}
+.paste{background:var(--sunk);border-radius:12px;padding:12px 13px;font-size:13.5px;white-space:pre-wrap;
+  line-height:1.65;word-break:break-word;margin:10px 0}
+.note{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink);border-radius:12px;padding:11px 12px;font-size:13.5px;margin-bottom:12px}
+.foot{text-align:center;color:var(--muted);font-size:12px;padding:22px 0 0}
+.foot a{color:var(--muted)}
+.chip{display:inline-block;background:var(--sunk);border-radius:999px;padding:3px 10px;font-size:12px;margin-right:6px}
+/* ---- เช็กสลิป ---- */
+.drop{position:relative;border:2px dashed var(--line);border-radius:14px;background:var(--sunk);
+  padding:26px 14px;text-align:center;color:var(--muted);font-size:14px;line-height:1.5;cursor:pointer}
+.drop.hot{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 8%,var(--sunk))}
+.drop input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;padding:0;border:0}
+.drop b{color:var(--ink)}
+.vd{border-radius:14px;padding:14px;margin-top:12px;border:1px solid}
+.vd .vt{font-family:var(--display);font-weight:700;font-size:17px;line-height:1.3;margin-bottom:4px}
+.vd .vs{font-size:13.5px;line-height:1.55}
+.vd.good{background:#e9f7f0;border-color:#b6e0cd;color:#0c5438}
+.vd.bad{background:#fdeaea;border-color:#f3bfbf;color:#8a1c1c}
+.vd.warn{background:var(--warn-bg);border-color:var(--warn-line);color:var(--warn-ink)}
+.kv{display:flex;gap:10px;font-size:13.5px;padding:5px 0;border-top:1px dashed rgba(0,0,0,.14)}
+.kv .k{opacity:.75;flex:none;min-width:92px}
+.kv .v{font-weight:600;word-break:break-all}
+.slog{font-size:13px;padding:9px 0;border-top:1px solid var(--line);display:flex;gap:9px;align-items:baseline}
+.slog .r{font-weight:600;word-break:break-all;flex:1}
+.slog .d{color:var(--muted);font-size:12px;flex:none}
+.sbusy{text-align:center;color:var(--muted);font-size:14px;padding:16px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="bar" id="bar" hidden><div class="inner" id="barin"></div></div>
+<script src="../lib/qrcode.min.js"></script>
+<script>
+var SHOP = __SHOP_JSON__;
+
+/* ---------- helpers ---------- */
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function baht(n){ return '฿' + Number(n||0).toLocaleString('th-TH'); }
+var app = document.getElementById('app'), bar = document.getElementById('bar'), barin = document.getElementById('barin');
+
+/* ---------- PromptPay (EMVCo) ---------- */
+function tlv(id, v){ return id + String(v.length).padStart(2,'0') + v; }
+function crc16(s){
+  var crc = 0xFFFF;
+  for (var i=0;i<s.length;i++){
+    crc ^= s.charCodeAt(i) << 8;
+    for (var j=0;j<8;j++) crc = (crc & 0x8000) ? ((crc<<1) ^ 0x1021) & 0xFFFF : (crc<<1) & 0xFFFF;
+  }
+  return crc.toString(16).toUpperCase().padStart(4,'0');
+}
+function ppPayload(target, amount){
+  var t = String(target||'').replace(/\D/g,'');
+  if (!t) return '';
+  var acc;
+  if (t.length === 15) acc = tlv('03', t);
+  else if (t.length === 13) acc = tlv('02', t);
+  else acc = tlv('01', ('0000000000000' + '66' + t.replace(/^0+/,'')).slice(-13));
+  var merchant = tlv('29', tlv('00','A000000677010111') + acc);
+  var amt = Number(amount) > 0 ? Number(amount).toFixed(2) : '';
+  var p = tlv('00','01') + tlv('01', amt ? '12' : '11') + merchant + tlv('53','764');
+  if (amt) p += tlv('54', amt);
+  p += tlv('58','TH') + '6304';
+  return p + crc16(p);
+}
+function qrSvg(text){
+  try{
+    var q = qrcode(0,'M'); q.addData(text); q.make();
+    return q.createSvgTag({cellSize:4, margin:0, scalable:true});
+  }catch(e){ return '<div class="small">สร้าง QR ไม่ได้</div>'; }
+}
+
+/* ---------- ที่อยู่ที่ลูกค้าวางมา ---------- */
+function splitAddress(text){
+  var out = {name:'', phone:'', addr:''};
+  var raw = String(text).replace(/\r/g,'').split('\n');
+  var PH = [/0\d{8,9}(?!\d)/, /0\d{1,2}[-. ]\d{3,4}[-. ]\d{4}(?!\d)/, /0\d{1,2}[-. ]\d{3}[-. ]\d{3}(?!\d)/];
+  for (var i=0;i<raw.length && !out.phone;i++){
+    for (var k=0;k<PH.length;k++){
+      var m = raw[i].match(PH[k]);
+      if (!m) continue;
+      var d = m[0].replace(/\D/g,'');
+      if (d.length < 9 || d.length > 10) continue;
+      out.phone = d; raw[i] = raw[i].replace(m[0],' '); break;
+    }
+  }
+  var lines = raw.map(function(s){ return s.trim(); }).filter(Boolean);
+  if (!lines.length) return out;
+  var ai = -1;
+  for (var j=0;j<lines.length;j++){
+    if (/\d{5}\s*$/.test(lines[j]) || /(ต\.|อ\.|จ\.|ตำบล|อำเภอ|จังหวัด|แขวง|เขต|หมู่|ม\.\d)/.test(lines[j])){ ai = j; break; }
+  }
+  if (ai < 0) ai = lines.length - 1;
+  out.addr = lines.slice(ai).join(' ').replace(/\s{2,}/g,' ').trim();
+  out.name = (lines.slice(0, ai)[0] || '').slice(0,60);
+  if (!out.name && ai === 0){
+    var one = out.addr.match(/^(\D{2,30}?)\s+(\d.*)$/);
+    if (one){ out.name = one[1].trim().slice(0,60); out.addr = one[2].trim(); }
+  }
+  return out;
+}
+
+/* ---------- state ---------- */
+/* ---------- ธีม: เครื่องยนต์ตัวเดียว หน้าตาหลายแบบ ---------- */
+var THEMES = {
+  suan: { name:'สวนช่าง · ของใช้ในบ้าน', font:'Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600',
+    v:{'--brand':'#0e8a5f','--brand-dark':'#0a6e4b','--accent':'#e09200','--bg':'#f4f5f3','--surface':'#fff','--sunk':'#f0f1ef',
+       '--ink':'#161c19','--muted':'#6a7470','--line':'#e2e5e2','--r':'16px',
+       '--display':"'Bai Jamjuree',sans-serif",'--body':"'IBM Plex Sans Thai',sans-serif"} },
+  food: { name:'ของกิน คาเฟ่ ขนม', font:'Mitr:wght@500;600&family=Sarabun:wght@400;500;600',
+    v:{'--brand':'#c2410c','--brand-dark':'#9a330a','--accent':'#b45309','--bg':'#fdf6ee','--surface':'#fff','--sunk':'#f7ece0',
+       '--ink':'#2b1d12','--muted':'#8a7360','--line':'#ecdcc9','--r':'20px',
+       '--display':"'Mitr',sans-serif",'--body':"'Sarabun',sans-serif",
+       '--payg':'linear-gradient(170deg,#7c2d12,#4c1d0b)','--warn-bg':'#fdf0dc','--warn-line':'#e9cfa8'} },
+  beauty:{ name:'เสื้อผ้า เครื่องสำอาง', font:'Prompt:wght@500;600;700',
+    v:{'--brand':'#b03a68','--brand-dark':'#8d2c52','--accent':'#c2708f','--bg':'#fff7f9','--surface':'#fff','--sunk':'#fbeef2',
+       '--ink':'#2a1620','--muted':'#8c6b78','--line':'#f2dde4','--r':'22px',
+       '--display':"'Prompt',sans-serif",'--body':"'Prompt',sans-serif",
+       '--payg':'linear-gradient(170deg,#7d2348,#4d1430)','--warn-bg':'#fdeef3','--warn-line':'#f0cdd9'} },
+  pro:   { name:'มือถือ แกดเจ็ต พรีเมียม', font:'Kanit:wght@500;600&family=Noto+Sans+Thai:wght@400;500;600',
+    v:{'--brand':'#15b37a','--brand-dark':'#0f8f61','--on-brand':'#05140e','--accent':'#d8b24a','--bg':'#0f1115','--surface':'#191d23',
+       '--sunk':'#23282f','--ink':'#eef1f4','--muted':'#98a1ab','--line':'#2d333b','--r':'14px',
+       '--display':"'Kanit',sans-serif",'--body':"'Noto Sans Thai',sans-serif",
+       '--payg':'linear-gradient(170deg,#1d2a3a,#111823)','--warn-bg':'#2a2416','--warn-line':'#4d421f','--warn-ink':'#f0e2b8'} }
+};
+function applyTheme(){
+  var q = (location.search.match(/[?&]theme=([a-z]+)/) || [])[1];
+  var key = (q && THEMES[q]) ? q : (THEMES[SHOP.theme] ? SHOP.theme : 'suan');
+  var th = THEMES[key]; SHOP._theme = key;
+  var r = document.documentElement;
+  Object.keys(th.v).forEach(function(k){ r.style.setProperty(k, th.v[k]); });
+  if (key !== 'suan'){
+    var l = document.createElement('link'); l.rel = 'stylesheet';
+    l.href = 'https://fonts.googleapis.com/css2?family=' + th.font + '&display=swap';
+    document.head.appendChild(l);
+  }
+  var m = document.querySelector('meta[name=theme-color]');
+  if (!m){ m = document.createElement('meta'); m.name = 'theme-color'; document.head.appendChild(m); }
+  m.content = th.v['--bg'];
+}
+
+var cart = {}, shipIdx = 0, step = 'shop', pIdx = 0, cust = {name:'',phone:'',addr:''}, payWay = 'pp', billNote = '';
+var PR = SHOP.products || [], SH = (SHOP.ship && SHOP.ship.length) ? SHOP.ship : [{n:'ค่าส่ง',p:0}];
+
+function lines(){
+  var out = [];
+  for (var i=0;i<PR.length;i++) if (cart[i] > 0) out.push({i:i, p:PR[i], q:cart[i]});
+  return out;
+}
+function goods(){ return lines().reduce(function(a,l){ return a + Number(l.p.price||0)*l.q; }, 0); }
+function ship(){ return SH[Math.min(shipIdx, SH.length-1)] || {n:'',p:0}; }
+function total(){ return goods() + Number(ship().p||0); }
+function orderNo(){
+  var d = new Date(), p = function(n){ return String(n).padStart(2,'0'); };
+  return p(d.getDate()) + p(d.getMonth()+1) + '-' + Math.random().toString(36).slice(2,5).toUpperCase();
+}
+
+/* ---------- ข้อความสำหรับส่งเข้าแชท ---------- */
+function orderText(no){
+  var L = ['🧾 สั่งซื้อ ' + SHOP.name];
+  lines().forEach(function(l){ L.push('• ' + l.p.name + ' ×' + l.q + '  ' + baht(l.p.price*l.q)); });
+  if (Number(ship().p) > 0) L.push('• ค่าส่ง ' + ship().n + '  ' + baht(ship().p));
+  else if (ship().n) L.push('• ' + ship().n + '  ฟรี');
+  L.push('ยอดรวม ' + baht(total()));
+  L.push('');
+  L.push('ชื่อ ' + (cust.name||'-'));
+  L.push('เบอร์ ' + (cust.phone||'-'));
+  L.push('ที่อยู่ ' + (cust.addr||'-'));
+  L.push('');
+  L.push(payWay === 'cod' ? 'จ่าย: เก็บเงินปลายทาง' : 'จ่าย: โอนพร้อมเพย์ (แนบสลิปในแชทได้เลย)');
+  if (no) L.push('เลขออเดอร์ ' + no);
+  return L.join('\n');
+}
+function copyText(t){
+  try{
+    if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(t);
+  }catch(e){}
+  try{
+    var a = document.createElement('textarea');
+    a.value = t; a.style.position='fixed'; a.style.opacity='0';
+    document.body.appendChild(a); a.select(); document.execCommand('copy'); document.body.removeChild(a);
+  }catch(e){}
+  return Promise.resolve();
+}
+
+/* ---------- บิล: ฝังมากับลิงก์ ไม่ต้องใช้ฐานข้อมูล ---------- */
+function b64e(s){ return btoa(unescape(encodeURIComponent(s))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+function b64d(s){ s = s.replace(/-/g,'+').replace(/_/g,'/'); return decodeURIComponent(escape(atob(s))); }
+function billLink(){
+  var data = {i: lines().map(function(l){ return [l.i, l.q]; }), s: shipIdx};
+  if (billNote) data.n = billNote;
+  return location.origin + location.pathname + '#b-' + b64e(JSON.stringify(data));
+}
+function readBill(){
+  var h = location.hash || '';
+  if (h.indexOf('#b-') !== 0) return false;
+  try{
+    var d = JSON.parse(b64d(h.slice(3)));
+    cart = {}; (d.i||[]).forEach(function(x){ cart[x[0]] = x[1]; });
+    shipIdx = Number(d.s)||0; billNote = d.n || '';
+    return lines().length > 0;
+  }catch(e){ return false; }
+}
+
+/* ---------- views ---------- */
+/* การ์ดเล็กในตะแกรง 2 ช่อง */
+function card(p, i){
+  var q = cart[i] || 0;
+  return '<div class="pc" data-open="'+i+'">' +
+    (p.img ? '<div class="pcimg"><img src="'+esc(p.img)+'" alt="'+esc(p.name)+'"'+(i < 4 ? ' fetchpriority="high"' : ' loading="lazy"')+'></div>'
+           : '<div class="pcimg"></div>') +
+    '<div class="pcb"><div class="pcname">'+esc(p.name)+'</div>' +
+      '<div class="pcfoot"><div class="pcprice b">'+baht(p.price)+'</div>' +
+      (q ? '<div class="pcq"><button data-dec="'+i+'">−</button><span>'+q+'</span><button data-inc="'+i+'">+</button></div>'
+         : '<button class="pcadd" data-inc="'+i+'" aria-label="ใส่ตะกร้า">+</button>') +
+      '</div></div></div>';
+}
+/* เหตุผลให้ลูกค้ากล้าสั่ง — ดึงจากข้อมูลร้านจริงเท่านั้น ไม่มีรีวิวปลอม */
+function trustHtml(){
+  var it = [];
+  var free = SH.filter(function(s){ return !Number(s.p); });
+  var paid = SH.filter(function(s){ return Number(s.p) > 0; });
+  if (paid.length) it.push(['🚚','ส่งทั่วไทย ค่าส่งเริ่ม '+baht(Math.min.apply(null, paid.map(function(s){return Number(s.p);})))]);
+  else if (SH.length) it.push(['🚚','ส่งทั่วไทย']);
+  if (free.length) it.push(['🎁', free[0].n]);
+  if (SHOP.cod) it.push(['💵','เก็บเงินปลายทางได้ จ่ายตอนของถึง']);
+  if (SHOP.pp && !SHOP.demo) it.push(['🏦','โอนเข้าบัญชีร้านโดยตรง ไม่ผ่านคนกลาง']);
+  if (SHOP.chat && SHOP.chat.url) it.push(['💬','ถามก่อนสั่งได้ ตอบในแชทร้าน']);
+  (SHOP.trust || []).forEach(function(t){ it.push(['✅', t]); });
+  if (!it.length) return '';
+  return '<div class="trust">' + it.map(function(x){
+    return '<div><i>'+x[0]+'</i><span>'+esc(x[1])+'</span></div>'; }).join('') + '</div>';
+}
+function viewShop(){
+  return (SHOP.tagline ? '<p class="tagline">'+esc(SHOP.tagline)+'</p>' : '') +
+    trustHtml() +
+    '<div class="sechead">สินค้าทั้งหมด '+PR.length+' อย่าง</div>' +
+    '<div class="grid">' + PR.map(card).join('') + '</div>' + footer();
+}
+/* หน้ารายละเอียดสินค้า */
+function viewProduct(i){
+  var p = PR[i]; if (!p) { step='shop'; return viewShop(); }
+  var q = cart[i] || 0;
+  return '<button class="back" data-a="back">← กลับไปดูสินค้าอื่น</button>' +
+    '<div class="pbig">' +
+    (p.img ? '<div class="pbigimg"><img src="'+esc(p.img)+'" alt="'+esc(p.name)+'" fetchpriority="high"></div>' : '') +
+    '<div class="pbigbody">' +
+      '<div class="pbigname">'+esc(p.name)+'</div>' +
+      '<div class="pcprice b" style="font-size:24px">'+baht(p.price)+'</div>' +
+      (p.note ? '<div class="pbignote">'+esc(p.note)+'</div>' : '') +
+      '<button class="btn-buy" data-buy="'+i+'">สั่งซื้อเลย <span class="b">'+baht(p.price)+'</span> →</button>' +
+      (q ? '<div class="qty"><button data-dec="'+i+'">−</button><span>'+q+' ชิ้นในตะกร้า</span><button data-inc="'+i+'">+</button></div>'
+         : '<button class="addmore" data-inc="'+i+'">ใส่ตะกร้า ซื้อหลายชิ้น</button>') +
+    '</div></div>' + trustHtml() + footer();
+}
+function receipt(){
+  var h = '';
+  lines().forEach(function(l){
+    h += '<div class="row"><div class="n">'+esc(l.p.name)+' ×'+l.q+'</div><div class="b">'+baht(l.p.price*l.q)+'</div></div>';
+  });
+  h += '<div class="row"><div class="n muted">'+esc(ship().n)+'</div><div class="b">'+(Number(ship().p)>0?baht(ship().p):'ฟรี')+'</div></div>';
+  h += '<div class="tot"><div>รวมทั้งหมด</div><div class="v">'+baht(total())+'</div></div>';
+  return h;
+}
+function viewAddr(){
+  var shipHtml = SH.map(function(s,i){
+    return '<label><input type="radio" name="sh" value="'+i+'"'+(i===shipIdx?' checked':'')+'>'+
+      '<span>'+esc(s.n)+'</span><span class="p">'+(Number(s.p)>0?baht(s.p):'ฟรี')+'</span></label>';
+  }).join('');
+  var payHtml = SHOP.cod
+    ? '<div class="card ship"><div class="h">จ่ายยังไง</div>'+
+      '<label><input type="radio" name="pw" value="pp"'+(payWay==='pp'?' checked':'')+'><span>โอนพร้อมเพย์ (สแกน QR ยอดตรง)</span></label>'+
+      '<label><input type="radio" name="pw" value="cod"'+(payWay==='cod'?' checked':'')+'><span>เก็บเงินปลายทาง</span></label></div>'
+    : '';
+  return '<div class="card"><div class="h">ส่งไปที่ไหน</div>'+
+      '<label class="f">วางข้อความที่อยู่มาทั้งก้อนได้เลย<textarea id="blob" placeholder="ชื่อ เบอร์ ที่อยู่ วางมาทั้งหมด ระบบแยกให้เอง"></textarea></label>'+
+      '<button class="btn-line" data-a="split" style="width:100%">แยกให้อัตโนมัติ</button>'+
+      '<label class="f" style="margin-top:12px">ชื่อผู้รับ<input id="c_name" value="'+esc(cust.name)+'"></label>'+
+      '<label class="f">เบอร์โทร<input id="c_phone" inputmode="numeric" value="'+esc(cust.phone)+'"></label>'+
+      '<label class="f">ที่อยู่<textarea id="c_addr">'+esc(cust.addr)+'</textarea></label>'+
+    '</div>'+
+    '<div class="card ship"><div class="h">ค่าส่ง</div>'+shipHtml+'</div>'+
+    payHtml+
+    '<div class="card"><div class="h">รายการ</div>'+receipt()+'</div>' + footer();
+}
+/* ร้านตัวอย่าง: ไม่สร้าง QR จ่ายเงินจริง (กันคนหลงโอน) */
+function qrHtml(){
+  if (SHOP.demo || !SHOP.pp)
+    return '<div class="qrdemo"><div class="big">🔒</div>'+
+           '<div class="t">ร้านตัวอย่าง ไม่มี QR จ่ายเงิน</div>'+
+           '<div class="s">ร้านจริงตรงนี้จะเป็น QR พร้อมเพย์<br>ของร้านคุณ พร้อมยอดเงินในตัว</div></div>';
+  return '<div class="qrbox" data-qr="'+esc(ppPayload(SHOP.pp, total()))+'"></div>';
+}
+function payLabel(){ return esc(SHOP.name) + (SHOP.demo || !SHOP.pp ? '' : ' · พร้อมเพย์'); }
+function payHint(){
+  return SHOP.demo || !SHOP.pp
+    ? '<div class="hint">หน้านี้ทำไว้ให้ดูเป็นตัวอย่างเท่านั้น ยังโอนเงินไม่ได้</div>'
+    : '<div class="hint">แคปหน้าจอ → เปิดแอปธนาคาร → สแกน → เลือกรูปจากคลังภาพ<br>ยอดเงินฝังมากับ QR แล้ว ไม่ต้องพิมพ์เอง</div>';
+}
+function viewPay(no){
+  var pp = payWay === 'pp' && (SHOP.pp || SHOP.demo);
+  var h = '';
+  if (pp){
+    h += '<div class="pay"><div class="lbl">'+payLabel()+'</div>'+
+      '<div class="lbl">ยอดที่ต้องโอน</div><div class="amt">'+baht(total())+'</div>'+
+      qrHtml() + payHint() + '</div>';
+  } else {
+    h += '<div class="note">เก็บเงินปลายทาง — เตรียมเงินสด '+baht(total())+' ไว้ตอนของถึงได้เลย</div>';
+  }
+  h += '<div class="card"><div class="h">รายการ #'+esc(no)+'</div>'+receipt()+
+       '<div class="row"><div class="n muted">'+esc(cust.name)+' · '+esc(cust.phone)+'<br>'+esc(cust.addr)+'</div></div></div>';
+  h += '<div class="note"><b>ขั้นสุดท้าย</b> กดปุ่มข้างล่าง ระบบจะคัดลอกรายการให้ แล้วเปิดแชทร้าน — <b>วางในแชทแล้วส่ง</b> ร้านถึงจะเห็นออเดอร์'+
+       (pp ? ' (แนบสลิปไปด้วยได้เลย)' : '') + '</div>';
+  h += '<div class="paste" id="otext">'+esc(orderText(no))+'</div>' + footer();
+  return h;
+}
+function viewDone(){
+  return '<div class="ok"><div class="tick">✓</div>'+
+    '<div style="font-family:var(--display);font-weight:700;font-size:20px">คัดลอกรายการแล้ว</div>'+
+    '<p class="muted small">ถ้าแชทไม่เปิดเอง กดปุ่มข้างล่าง แล้ววางข้อความในแชทร้านได้เลย</p></div>' + footer();
+}
+function viewBill(){
+  var h = '<div class="note">บิลจากร้าน'+(billNote?' · '+esc(billNote):'')+'</div>';
+  h += '<div class="pay"><div class="lbl">'+payLabel()+'</div>'+
+    '<div class="lbl">ยอดที่ต้องโอน</div><div class="amt">'+baht(total())+'</div>'+
+    qrHtml() + payHint() + '</div>';
+  h += '<div class="card"><div class="h">รายการ</div>'+receipt()+'</div>';
+  h += '<div class="note">โอนแล้วส่งสลิปในแชทร้านได้เลย</div>' + footer();
+  return h;
+}
+function viewAdmin(){
+  var list = PR.map(function(p,i){
+    var q = cart[i]||0;
+    return '<div class="row"><div class="n">'+esc(p.name)+'<br><span class="muted small">'+baht(p.price)+'</span></div>'+
+      (q ? '<button class="btn-line" data-dec="'+i+'">−</button><span class="b">'+q+'</span><button class="btn-line" data-inc="'+i+'">+</button>'
+         : '<button class="btn-line" data-inc="'+i+'">เพิ่ม</button>')+'</div>';
+  }).join('');
+  var shipHtml = SH.map(function(s,i){
+    return '<label><input type="radio" name="sh" value="'+i+'"'+(i===shipIdx?' checked':'')+'><span>'+esc(s.n)+'</span>'+
+      '<span class="p">'+(Number(s.p)>0?baht(s.p):'ฟรี')+'</span></label>'; }).join('');
+  var h = '<div class="note">หน้านี้สำหรับเจ้าของร้าน — เลือกของที่ลูกค้าสั่ง แล้วส่งลิงก์บิลให้เขาจ่าย ลูกค้าไม่เห็นหน้านี้</div>';
+  h += '<button class="btn-line" data-a="slip" style="width:100%;margin-bottom:12px">🧾 เช็กสลิปที่ลูกค้าส่งมา (กันสลิปปลอม/ส่งซ้ำ)</button>';
+  h += '<div class="card">'+list+'</div>';
+  h += '<div class="card ship"><div class="h">ค่าส่ง</div>'+shipHtml+'</div>';
+  h += '<div class="card"><label class="f">โน้ตถึงลูกค้า (ไม่ใส่ก็ได้)<input id="bnote" value="'+esc(billNote)+'"></label>'+receipt()+'</div>';
+  if (lines().length) h += '<div class="paste" id="btext">'+esc(billText())+'</div>';
+  return h + footer();
+}
+function billText(){
+  var L = ['🧾 ' + SHOP.name];
+  lines().forEach(function(l){ L.push('• ' + l.p.name + ' ×' + l.q + '  ' + baht(l.p.price*l.q)); });
+  if (Number(ship().p) > 0) L.push('• ค่าส่ง ' + ship().n + '  ' + baht(ship().p));
+  else if (ship().n) L.push('• ' + ship().n + '  ฟรี');
+  L.push('ยอดรวม ' + baht(total()));
+  if (billNote) L.push(billNote);
+  L.push('');
+  L.push('กดสแกนจ่ายได้เลย 👇');
+  L.push(billLink());
+  return L.join('\n');
+}
+function footer(){
+  return '<div class="foot">'+esc(SHOP.name)+(SHOP.pp?' · พร้อมเพย์':'')+'<br>'+
+    '<span class="small">เงินโอนเข้าบัญชีร้านโดยตรง ไม่ผ่านคนกลาง</span></div>';
+}
+
+/* ---------- เช็กสลิป ----------
+   ไม่ได้ต่อกับธนาคาร แต่อ่าน QR เล็กบนสลิปซึ่งมีเลขอ้างอิงจริงของรายการโอน
+   จับได้: (1) สลิปเก่าเอามาใช้ซ้ำ  (2) รูปที่ไม่มี/ไม่ใช่ QR สลิปธนาคาร        */
+var BANKS = {'002':'กรุงเทพ','004':'กสิกรไทย','006':'กรุงไทย','011':'ทีทีบี','014':'ไทยพาณิชย์',
+  '017':'ซิตี้แบงก์','020':'สแตนดาร์ดชาร์เตอร์ด','022':'ซีไอเอ็มบี','024':'ยูโอบี','025':'กรุงศรีอยุธยา',
+  '030':'ออมสิน','033':'อาคารสงเคราะห์','034':'ธ.ก.ส.','039':'เมกะสากลพาณิชย์','045':'บีเอ็นพี',
+  '052':'แบงก์ออฟไชน่า','066':'อิสลามแห่งประเทศไทย','067':'ทิสโก้','069':'เกียรตินาคินภัทร',
+  '070':'ไอซีบีซี','071':'ไทยเครดิต','073':'แลนด์ แอนด์ เฮ้าส์','098':'เอสเอ็มอี'};
+
+function tlvRead(s){
+  var out = {}, i = 0;
+  while (i + 4 <= s.length){
+    var tag = s.slice(i,i+2), lenS = s.slice(i+2,i+4);
+    if (!/^\d{2}$/.test(lenS)) return null;
+    var len = parseInt(lenS,10), val = s.slice(i+4, i+4+len);
+    if (val.length < len) return null;
+    out[tag] = val; i += 4 + len;
+  }
+  return i === s.length ? out : null;
+}
+function slipCrcOk(p){
+  var k = p.lastIndexOf('9104');
+  if (k < 0) return -1;
+  var want = crc16(p.slice(0, k+4)), got = p.slice(k+4);
+  if (got.toUpperCase() === want) return k;
+  /* บางแอปตัดเลขศูนย์หน้าของ CRC ทิ้ง */
+  if (got.length > 0 && got.length < 4 && got.toUpperCase().padStart(4,'0') === want) return k;
+  return -1;
+}
+function parseSlip(payload){
+  var p = String(payload||'').trim().replace(/\s+/g,'');
+  if (p.length < 14 || p.slice(0,2) !== '00') return null;
+  var k = slipCrcOk(p);
+  if (k < 0) return null;
+  var top = tlvRead(p.slice(0, k));
+  if (!top || !top['00']) return null;
+  var sub = tlvRead(top['00']);
+  if (!sub) return null;
+  if (sub['00'] === '000001' && sub['02'])
+    return {kind:'bank', bank:(sub['01']||''), ref:sub['02']};
+  if (sub['00'] === '01' && sub['01'] === '01' && sub['03'])
+    return {kind:'truemoney', bank:'', ref:sub['03'], date:(sub['04']||'')};
+  return null;
+}
+function bankName(code){ return BANKS[code] ? ('ธ.' + BANKS[code]) : (code ? ('รหัสธนาคาร ' + code) : ''); }
+
+var SKEY = 'rp_slip_' + location.pathname.replace(/[^a-z0-9]+/gi,'_');
+function slipDb(){ try { return JSON.parse(localStorage.getItem(SKEY) || '[]') || []; } catch(e){ return []; } }
+function slipPut(rec){
+  try { var d = slipDb(); d.push(rec); localStorage.setItem(SKEY, JSON.stringify(d.slice(-400))); } catch(e){}
+}
+function slipFind(ref){ var d = slipDb(); for (var i=d.length-1;i>=0;i--) if (d[i].ref === ref) return d[i]; return null; }
+function thDate(ts){
+  var d = new Date(ts);
+  return d.toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit'}) + ' ' +
+         d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
+}
+
+var jsqrP = null;
+function loadJsQR(){
+  if (window.jsQR) return Promise.resolve(true);
+  if (!jsqrP) jsqrP = new Promise(function(res){
+    var s = document.createElement('script');
+    s.src = '../lib/jsQR.min.js';
+    s.onload = function(){ res(!!window.jsQR); };
+    s.onerror = function(){ jsqrP = null; res(false); };
+    document.head.appendChild(s);
+  });
+  return jsqrP;
+}
+function readQrFromImage(file){
+  return loadJsQR().then(function(ok){
+    if (!ok) return Promise.reject(new Error('โหลดตัวอ่าน QR ไม่ได้ ลองเช็กเน็ตแล้วลองใหม่'));
+    return new Promise(function(res, rej){
+      var img = new Image(), url = URL.createObjectURL(file);
+      img.onload = function(){
+        URL.revokeObjectURL(url);
+        var hit = null;
+        [1, 2, 1.5, 0.6, 3].some(function(k){
+          var w = Math.max(1, Math.round(img.width*k)), h = Math.max(1, Math.round(img.height*k));
+          if (w*h > 2.4e7) return false;
+          var c = document.createElement('canvas'); c.width = w; c.height = h;
+          var x = c.getContext('2d', {willReadFrequently:true});
+          x.drawImage(img, 0, 0, w, h);
+          var r = window.jsQR(x.getImageData(0,0,w,h).data, w, h, {inversionAttempts:'attemptBoth'});
+          if (r && r.data){ hit = r.data; return true; }
+          return false;
+        });
+        res(hit);
+      };
+      img.onerror = function(){ URL.revokeObjectURL(url); rej(new Error('เปิดรูปนี้ไม่ได้')); };
+      img.src = url;
+    });
+  });
+}
+
+var slipS = {busy:false, err:'', info:null, dup:null, got:false, raw:''};
+function slipReset(){ slipS = {busy:false, err:'', info:null, dup:null, got:false, raw:''}; }
+function slipCheckText(payload){
+  slipS.busy = false; slipS.err = ''; slipS.got = true; slipS.raw = payload || '';
+  slipS.info = parseSlip(payload);
+  slipS.dup = slipS.info ? slipFind(slipS.info.ref) : null;
+  render();
+}
+function slipCheckFile(file){
+  if (!file) return;
+  slipReset(); slipS.busy = true; render();
+  readQrFromImage(file).then(function(data){
+    if (!data){ slipS.busy = false; slipS.got = true; slipS.info = null; slipS.raw = ''; render(); return; }
+    slipCheckText(data);
+  }).catch(function(e){
+    slipS.busy = false; slipS.err = e.message || 'อ่านรูปไม่สำเร็จ'; render();
+  });
+}
+function slipVerdict(){
+  if (slipS.busy) return '<div class="sbusy">⏳ กำลังอ่าน QR บนสลิป…</div>';
+  if (slipS.err) return '<div class="vd warn"><div class="vt">⚠️ '+esc(slipS.err)+'</div></div>';
+  if (!slipS.got) return '';
+  var i = slipS.info;
+  if (!i) return '<div class="vd bad"><div class="vt">🚨 ไม่ใช่สลิปธนาคารจริง (หรืออ่าน QR ไม่ออก)</div>'+
+    '<div class="vs">สลิปจริงจากแอปธนาคารจะมี QR เล็ก ๆ อยู่บนสลิปเสมอ ถ้าไม่เจอ ให้ขอให้ลูกค้าส่งสลิปเต็ม ๆ ที่ไม่ถูกครอบตัด '+
+    'ไม่ย่อจนเบลอ และเป็นภาพจากแอปธนาคารโดยตรง — ถ้าส่งเต็มแล้วยังไม่เจอ ให้สงสัยไว้ก่อน</div></div>';
+  var rows = '<div class="kv"><span class="k">เลขอ้างอิง</span><span class="v">'+esc(i.ref)+'</span></div>';
+  if (i.kind === 'truemoney') rows += '<div class="kv"><span class="k">ช่องทาง</span><span class="v">ทรูมันนี่ วอลเล็ท</span></div>';
+  else rows += '<div class="kv"><span class="k">ธนาคารผู้โอน</span><span class="v">'+esc(bankName(i.bank) || '—')+'</span></div>';
+  if (i.date && i.date.length === 8)
+    rows += '<div class="kv"><span class="k">วันที่โอน</span><span class="v">'+esc(i.date.slice(0,2)+'/'+i.date.slice(2,4)+'/'+i.date.slice(4))+'</span></div>';
+  if (slipS.dup){
+    return '<div class="vd bad"><div class="vt">🚨 สลิปนี้เคยใช้แล้ว</div>'+
+      '<div class="vs">ร้านนี้เคยบันทึกสลิปใบนี้ไว้แล้วเมื่อ <b>'+esc(thDate(slipS.dup.at))+'</b>'+
+      (slipS.dup.amt ? ' ยอด <b>'+baht(slipS.dup.amt)+'</b>' : '')+
+      (slipS.dup.note ? ' ('+esc(slipS.dup.note)+')' : '')+
+      ' — เป็นการเอาสลิปเก่ามาส่งซ้ำ อย่าเพิ่งส่งของ</div>'+rows+'</div>';
+  }
+  return '<div class="vd good"><div class="vt">✅ สลิปจริง และยังไม่เคยใช้</div>'+
+    '<div class="vs">QR บนสลิปถูกต้องตามรูปแบบของธนาคาร และเลขอ้างอิงนี้ยังไม่เคยถูกบันทึกในร้านนี้ '+
+    '<b>อย่าลืมเช็กยอดเงินกับเวลาในสลิปให้ตรงกับบิลด้วย</b> แล้วกดบันทึกไว้กันส่งซ้ำ</div>'+rows+
+    '<label class="f" style="margin-top:10px">ยอดที่โอนมา (ใส่ไว้กันลืม)<input id="samt" inputmode="numeric" placeholder="เช่น 540"></label>'+
+    '<button class="btn-line" data-a="sslip" style="width:100%;margin-top:8px">บันทึกว่าใช้สลิปใบนี้แล้ว</button></div>';
+}
+function viewSlip(){
+  var h = '<div class="note"><b>เช็กสลิปก่อนส่งของ</b> — ระบบอ่าน QR เล็ก ๆ บนสลิป ซึ่งมีเลขอ้างอิงจริงของรายการโอนอยู่ '+
+          'จับได้ 2 อย่าง: <b>สลิปเก่าเอามาส่งซ้ำ</b> และ <b>รูปที่ไม่ใช่สลิปธนาคาร</b> · '+
+          'ระบบนี้ไม่ได้ต่อกับธนาคาร จึงไม่ได้ยืนยันว่าเงินเข้าบัญชีแล้ว ยอดเงินต้องเช็กในแอปธนาคารเองเสมอ</div>';
+  h += '<div class="card"><div class="h">ใส่สลิปที่ลูกค้าส่งมา</div>'+
+       '<div class="drop" id="drop"><b>แตะเพื่อเลือกรูปสลิป</b><br>หรือวาง (Ctrl+V) หรือลากรูปมาทิ้งตรงนี้'+
+       '<input type="file" id="sfile" accept="image/*"></div>'+
+       '<label class="f" style="margin-top:12px">หรือวางข้อความจาก QR เอง (ไม่ต้องใส่ก็ได้)'+
+       '<input id="sraw" placeholder="00400006000001..."></label>'+
+       '<button class="btn-line" data-a="srawgo" style="width:100%;margin-top:8px">ตรวจจากข้อความ</button></div>';
+  h += slipVerdict();
+  var db = slipDb();
+  if (db.length){
+    var rows = db.slice(-12).reverse().map(function(r){
+      return '<div class="slog"><span class="r">'+esc(r.ref)+(r.amt?' · '+baht(r.amt):'')+'</span>'+
+             '<span class="d">'+esc(thDate(r.at))+'</span></div>'; }).join('');
+    h += '<div class="card"><div class="h">สลิปที่บันทึกไว้ ('+db.length+')</div>'+rows+
+         '<div class="small muted" style="margin-top:8px">เก็บไว้ในเครื่องนี้เท่านั้น ไม่ได้ส่งออกไปไหน · เปลี่ยนเครื่องหรือล้างข้อมูลเบราว์เซอร์แล้วรายการนี้จะหาย</div></div>';
+  }
+  return h + footer();
+}
+
+/* ---------- render ---------- */
+var lastNo = '';
+function render(){
+  var head = '<div class="top"><div class="logo">'+esc((SHOP.name||'ร').trim().slice(0,1))+'</div>'+
+             '<div class="shopname">'+esc(SHOP.name)+'</div></div>';
+  if (SHOP.demo) head += '<div class="demobar"><b>ร้านตัวอย่าง</b> — ทำไว้ให้ดูหน้าตาระบบเท่านั้น '+
+    'ยังไม่ได้ขายของจริง สั่งแล้วไม่มีของส่ง และจ่ายเงินไม่ได้</div>';
+  var body, foot = '';
+  if (step === 'bill'){ body = viewBill(); foot = '<button class="btn-main" data-a="chat">ทักร้าน / ส่งสลิป</button>'; }
+  else if (step === 'admin'){
+    body = viewAdmin();
+    foot = lines().length ? '<button class="btn-main" data-a="copybill">📋 คัดลอกบิล ไปวางในแชท</button>'
+                          : '<button class="btn-main" disabled>เลือกสินค้าที่ลูกค้าสั่ง</button>';
+  }
+  else if (step === 'slip'){
+    body = viewSlip();
+    foot = '<button class="btn-line" data-a="badmin" style="width:100%">← กลับหน้าเจ้าของร้าน</button>';
+  }
+  else if (step === 'shop' || step === 'p'){
+    body = step === 'p' ? viewProduct(pIdx) : viewShop();
+    foot = lines().length ? '<button class="btn-main" data-a="go">สั่งซื้อ · '+baht(total())+'</button>'
+                          : '<div class="small muted" style="padding:6px 2px">แตะที่สินค้าเพื่อดูรายละเอียด หรือกด + ใส่ตะกร้า</div>';
+  }
+  else if (step === 'addr'){
+    body = viewAddr();
+    foot = '<button class="btn-line" data-a="back">ย้อน</button><button class="btn-main" data-a="confirm">ยืนยันสั่งซื้อ</button>';
+  }
+  else if (step === 'pay'){
+    body = viewPay(lastNo);
+    foot = '<button class="btn-main" data-a="send">📋 คัดลอก + เปิดแชทร้าน</button>';
+  }
+  else { body = viewDone(); foot = '<button class="btn-main" data-a="chat">เปิดแชทร้านอีกครั้ง</button>'; }
+
+  app.innerHTML = head + body;
+  barin.innerHTML = foot; bar.hidden = !foot;
+  app.querySelectorAll('[data-qr]').forEach(function(q){ q.innerHTML = qrSvg(q.getAttribute('data-qr')); });
+}
+
+function readForm(){
+  var n = document.getElementById('c_name'), p = document.getElementById('c_phone'), a = document.getElementById('c_addr');
+  if (n) cust.name = n.value.trim();
+  if (p) cust.phone = p.value.trim();
+  if (a) cust.addr = a.value.trim();
+  var b = document.getElementById('bnote'); if (b) billNote = b.value.trim();
+}
+function openChat(){
+  if (SHOP.chat && SHOP.chat.url) window.open(SHOP.chat.url, '_blank', 'noopener');
+}
+
+document.addEventListener('click', function(ev){
+  var t = ev.target.closest('[data-buy],[data-inc],[data-dec],[data-a],[data-open]');
+  if (!t) return;
+  if (t.hasAttribute('data-open')){
+    pIdx = +t.getAttribute('data-open'); step = 'p'; render(); window.scrollTo(0,0); return;
+  }
+  if (t.hasAttribute('data-buy')){
+    var i = +t.getAttribute('data-buy');
+    if (!cart[i]) cart[i] = 1;
+    step = 'addr'; render(); window.scrollTo(0,0); return;
+  }
+  if (t.hasAttribute('data-inc')){ readForm(); var i2 = +t.getAttribute('data-inc'); cart[i2] = (cart[i2]||0)+1; render(); return; }
+  if (t.hasAttribute('data-dec')){ readForm(); var i3 = +t.getAttribute('data-dec'); cart[i3] = Math.max(0,(cart[i3]||0)-1); if(!cart[i3]) delete cart[i3]; render(); return; }
+  var a = t.getAttribute('data-a');
+  if (a === 'go'){ step = 'addr'; render(); window.scrollTo(0,0); return; }
+  if (a === 'back'){ readForm(); step = 'shop'; render(); return; }
+  if (a === 'split'){
+    var box = document.getElementById('blob');
+    if (box && box.value.trim()){
+      var r = splitAddress(box.value);
+      cust.name = r.name || cust.name; cust.phone = r.phone || cust.phone; cust.addr = r.addr || cust.addr;
+      render();
+      var b2 = document.getElementById('blob'); if (b2) b2.value = '';
+    }
+    return;
+  }
+  if (a === 'confirm'){
+    readForm();
+    if (!cust.name || !cust.phone || !cust.addr){ alert('ใส่ชื่อ เบอร์ และที่อยู่ให้ครบก่อนนะครับ'); return; }
+    lastNo = orderNo(); step = 'pay'; render(); window.scrollTo(0,0); return;
+  }
+  if (a === 'send'){
+    copyText(orderText(lastNo)).then(function(){ step = 'done'; render(); openChat(); });
+    return;
+  }
+  if (a === 'copybill'){ readForm(); copyText(billText()); t.textContent = '✓ คัดลอกแล้ว ไปวางในแชท'; return; }
+  if (a === 'chat'){ openChat(); return; }
+  if (a === 'slip'){ readForm(); slipReset(); step = 'slip'; render(); window.scrollTo(0,0); return; }
+  if (a === 'badmin'){ step = 'admin'; render(); window.scrollTo(0,0); return; }
+  if (a === 'srawgo'){
+    var rb = document.getElementById('sraw');
+    if (rb && rb.value.trim()) slipCheckText(rb.value.trim());
+    return;
+  }
+  if (a === 'sslip'){
+    if (!slipS.info) return;
+    var am = document.getElementById('samt');
+    slipPut({ref: slipS.info.ref, bank: slipS.info.bank || '', at: Date.now(),
+             amt: am && am.value ? Number(String(am.value).replace(/[^\d.]/g,'')) || 0 : 0, note: ''});
+    slipS.dup = slipFind(slipS.info.ref);
+    render(); window.scrollTo(0,0);
+    return;
+  }
+});
+/* วางรูปสลิป / ลากมาทิ้ง — ทำงานเฉพาะหน้าเช็กสลิป */
+document.addEventListener('paste', function(ev){
+  if (step !== 'slip' || !ev.clipboardData) return;
+  var it = ev.clipboardData.items || [];
+  for (var i=0;i<it.length;i++){
+    if (it[i].type && it[i].type.indexOf('image') === 0){
+      var f = it[i].getAsFile();
+      if (f){ ev.preventDefault(); slipCheckFile(f); return; }
+    }
+  }
+});
+['dragenter','dragover','dragleave','drop'].forEach(function(evn){
+  document.addEventListener(evn, function(ev){
+    if (step !== 'slip') return;
+    var d = document.getElementById('drop'); if (!d) return;
+    ev.preventDefault();
+    if (evn === 'dragenter' || evn === 'dragover') d.classList.add('hot');
+    else d.classList.remove('hot');
+    if (evn === 'drop' && ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0])
+      slipCheckFile(ev.dataTransfer.files[0]);
+  });
+});
+document.addEventListener('change', function(ev){
+  var n = ev.target.name;
+  if (n === 'sh'){ readForm(); shipIdx = +ev.target.value; render(); }
+  if (n === 'pw'){ readForm(); payWay = ev.target.value; render(); }
+  if (ev.target.id === 'sfile' && ev.target.files && ev.target.files[0]) slipCheckFile(ev.target.files[0]);
+});
+window.addEventListener('hashchange', function(){ boot(); });
+
+function boot(){
+  applyTheme();
+  cart = {}; shipIdx = 0;
+  if (readBill()) step = 'bill';
+  else if (location.hash === '#admin') step = 'admin';
+  else if (location.hash === '#slip'){ slipReset(); step = 'slip'; }
+  else step = 'shop';
+  render();
+}
+boot();
+</script>
+</body>
+</html>
