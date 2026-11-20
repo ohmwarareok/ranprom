@@ -19,6 +19,8 @@
   --bg:#f4f5f3; --surface:#fff; --sunk:#f0f1ef;
   --ink:#161c19; --muted:#6a7470; --line:#e2e5e2;
   --r:16px; --display:'Bai Jamjuree',sans-serif; --body:'IBM Plex Sans Thai',sans-serif;
+  --payg:linear-gradient(170deg,#23489f,#16306f); --on-pay:#fff;
+  --warn-bg:#fff8e6; --warn-line:#f0dfb0; --warn-ink:inherit;
   --pad:max(16px, env(safe-area-inset-left));
 }
 *{box-sizing:border-box}
@@ -83,7 +85,7 @@ textarea{min-height:84px;resize:vertical}
 .row .n{flex:1;font-size:14.5px}
 .tot{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid var(--ink);margin-top:8px;padding-top:10px}
 .tot .v{font-family:var(--display);font-weight:700;font-size:22px}
-.pay{background:linear-gradient(170deg,#23489f,#16306f);color:#fff;border-radius:var(--r);padding:18px 15px;text-align:center;margin-bottom:14px}
+.pay{background:var(--payg);color:var(--on-pay);border-radius:var(--r);padding:18px 15px;text-align:center;margin-bottom:14px}
 .pay .amt{font-family:var(--display);font-weight:700;font-size:34px;line-height:1.1;margin:2px 0 14px}
 .pay .lbl{font-size:13px;opacity:.85}
 .qrbox{background:#fff;border-radius:12px;padding:12px;display:inline-block;max-width:100%}
@@ -112,7 +114,7 @@ textarea{min-height:84px;resize:vertical}
   font-size:31px;margin:0 auto 14px}
 .paste{background:var(--sunk);border-radius:12px;padding:12px 13px;font-size:13.5px;white-space:pre-wrap;
   line-height:1.65;word-break:break-word;margin:10px 0}
-.note{background:#fff8e6;border:1px solid #f0dfb0;border-radius:12px;padding:11px 12px;font-size:13.5px;margin-bottom:12px}
+.note{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink);border-radius:12px;padding:11px 12px;font-size:13.5px;margin-bottom:12px}
 .foot{text-align:center;color:var(--muted);font-size:12px;padding:22px 0 0}
 .foot a{color:var(--muted)}
 .chip{display:inline-block;background:var(--sunk);border-radius:999px;padding:3px 10px;font-size:12px;margin-right:6px}
@@ -123,7 +125,7 @@ textarea{min-height:84px;resize:vertical}
 <div class="bar" id="bar" hidden><div class="inner" id="barin"></div></div>
 <script src="../lib/qrcode.min.js"></script>
 <script>
-var SHOP = {"name": "ร้านของดีหน้าฝน (ตัวอย่าง)", "tagline": "ของใช้รับมือหน้าฝน ส่งไว เก็บเงินปลายทางได้", "pp": "", "demo": true, "cod": true, "chat": {"url": "https://m.me/changbaanchabaplung"}, "ship": [{"n": "ส่งธรรมดา 2-4 วัน", "p": 40}, {"n": "ส่งด่วน 1-2 วัน", "p": 70}, {"n": "ซื้อครบ 500 ส่งฟรี", "p": 0}], "products": [{"name": "ชุดกันฝน EVA ผู้ใหญ่ เนื้อหนา", "price": 43, "note": "ชุดกันฝน EVA แบบชิ้นเดียว สำหรับผู้ใหญ่ เนื้อหนา น้ำหนักเบา เหมาะกับการใช้งานช่วงฝนตก", "img": "pic/1.jpg"}, {"name": "รองเท้าบู๊ท OHYAMA B.002", "price": 329, "note": "รองเท้าบู๊ท OHYAMA รุ่น B.002 เบา ฟู นุ่ม สำหรับกันฝน กันน้ำ และงานเกษตร", "img": "pic/2.jpg"}, {"name": "ถุงกันน้ำท่วม ไม่ต้องใส่ทราย", "price": 49, "note": "ถุงกันน้ำท่วมแบบไม่ต้องใส่ทราย พร้อมส่งจากไทย แช่น้ำ 3-5 นาทีแล้วนำไปใช้งานได้", "img": "pic/3.jpg"}, {"name": "แผ่นกั้นน้ำท่วม พลาสติกสีแดง", "price": 498, "note": "แผ่นกั้นน้ำท่วมพลาสติก สีแดง สินค้าพร้อมส่ง", "img": "pic/4.jpg"}, {"name": "ปั๊มจุ่มสแตนเลส 1 นิ้ว", "price": 409, "note": "ปั๊มจุ่มสแตนเลส ฐานเหล็ก มอเตอร์ทองแดงแท้ 100% สำหรับงานปั๊มน้ำ", "img": "pic/5.jpg"}, {"name": "ผ้าคลุมรถพลาสติกหนา E40", "price": 198, "note": "Simpile Life ผ้าคลุมรถพลาสติกหนาพิเศษ E40 สำหรับคลุมรถ กันฝน กันน้ำ และกันฝุ่น", "img": "pic/6.jpg"}, {"name": "ถุง PE หนา 60x90 นิ้ว", "price": 250, "note": "ถุง PE หนา ขนาด 60x90 นิ้ว 1 ใบ สำหรับใส่ตู้เย็นกันน้ำท่วม หรือใช้คลุมเตียงขนาดใหญ่", "img": "pic/7.jpg"}, {"name": "แผ่นกั้นน้ำฝนหน้าต่าง แถบซีล", "price": 92, "note": "แผ่นกั้นน้ำฝนหน้าต่าง แถบซีลเบี่ยงน้ำ", "img": "pic/8.jpg"}]};
+var SHOP = {"name": "ร้านของดีหน้าฝน (ตัวอย่าง)", "tagline": "ของใช้รับมือหน้าฝน ส่งไว เก็บเงินปลายทางได้", "pp": "", "demo": true, "theme": "suan", "trust": [], "cod": true, "chat": {"url": "https://m.me/changbaanchabaplung"}, "ship": [{"n": "ส่งธรรมดา 2-4 วัน", "p": 40}, {"n": "ส่งด่วน 1-2 วัน", "p": 70}, {"n": "ซื้อครบ 500 ส่งฟรี", "p": 0}], "products": [{"name": "ชุดกันฝน EVA ผู้ใหญ่ เนื้อหนา", "price": 43, "note": "ชุดกันฝน EVA แบบชิ้นเดียว สำหรับผู้ใหญ่ เนื้อหนา น้ำหนักเบา เหมาะกับการใช้งานช่วงฝนตก", "img": "pic/1.jpg"}, {"name": "รองเท้าบู๊ท OHYAMA B.002", "price": 329, "note": "รองเท้าบู๊ท OHYAMA รุ่น B.002 เบา ฟู นุ่ม สำหรับกันฝน กันน้ำ และงานเกษตร", "img": "pic/2.jpg"}, {"name": "ถุงกันน้ำท่วม ไม่ต้องใส่ทราย", "price": 49, "note": "ถุงกันน้ำท่วมแบบไม่ต้องใส่ทราย พร้อมส่งจากไทย แช่น้ำ 3-5 นาทีแล้วนำไปใช้งานได้", "img": "pic/3.jpg"}, {"name": "แผ่นกั้นน้ำท่วม พลาสติกสีแดง", "price": 498, "note": "แผ่นกั้นน้ำท่วมพลาสติก สีแดง สินค้าพร้อมส่ง", "img": "pic/4.jpg"}, {"name": "ปั๊มจุ่มสแตนเลส 1 นิ้ว", "price": 409, "note": "ปั๊มจุ่มสแตนเลส ฐานเหล็ก มอเตอร์ทองแดงแท้ 100% สำหรับงานปั๊มน้ำ", "img": "pic/5.jpg"}, {"name": "ผ้าคลุมรถพลาสติกหนา E40", "price": 198, "note": "Simpile Life ผ้าคลุมรถพลาสติกหนาพิเศษ E40 สำหรับคลุมรถ กันฝน กันน้ำ และกันฝุ่น", "img": "pic/6.jpg"}, {"name": "ถุง PE หนา 60x90 นิ้ว", "price": 250, "note": "ถุง PE หนา ขนาด 60x90 นิ้ว 1 ใบ สำหรับใส่ตู้เย็นกันน้ำท่วม หรือใช้คลุมเตียงขนาดใหญ่", "img": "pic/7.jpg"}, {"name": "แผ่นกั้นน้ำฝนหน้าต่าง แถบซีล", "price": 92, "note": "แผ่นกั้นน้ำฝนหน้าต่าง แถบซีลเบี่ยงน้ำ", "img": "pic/8.jpg"}]};
 
 /* ---------- helpers ---------- */
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){
@@ -193,6 +195,44 @@ function splitAddress(text){
 }
 
 /* ---------- state ---------- */
+/* ---------- ธีม: เครื่องยนต์ตัวเดียว หน้าตาหลายแบบ ---------- */
+var THEMES = {
+  suan: { name:'สวนช่าง · ของใช้ในบ้าน', font:'Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600',
+    v:{'--brand':'#0e8a5f','--brand-dark':'#0a6e4b','--accent':'#e09200','--bg':'#f4f5f3','--surface':'#fff','--sunk':'#f0f1ef',
+       '--ink':'#161c19','--muted':'#6a7470','--line':'#e2e5e2','--r':'16px',
+       '--display':"'Bai Jamjuree',sans-serif",'--body':"'IBM Plex Sans Thai',sans-serif"} },
+  food: { name:'ของกิน คาเฟ่ ขนม', font:'Mitr:wght@500;600&family=Sarabun:wght@400;500;600',
+    v:{'--brand':'#c2410c','--brand-dark':'#9a330a','--accent':'#b45309','--bg':'#fdf6ee','--surface':'#fff','--sunk':'#f7ece0',
+       '--ink':'#2b1d12','--muted':'#8a7360','--line':'#ecdcc9','--r':'20px',
+       '--display':"'Mitr',sans-serif",'--body':"'Sarabun',sans-serif",
+       '--payg':'linear-gradient(170deg,#7c2d12,#4c1d0b)','--warn-bg':'#fdf0dc','--warn-line':'#e9cfa8'} },
+  beauty:{ name:'เสื้อผ้า เครื่องสำอาง', font:'Prompt:wght@500;600;700',
+    v:{'--brand':'#b03a68','--brand-dark':'#8d2c52','--accent':'#c2708f','--bg':'#fff7f9','--surface':'#fff','--sunk':'#fbeef2',
+       '--ink':'#2a1620','--muted':'#8c6b78','--line':'#f2dde4','--r':'22px',
+       '--display':"'Prompt',sans-serif",'--body':"'Prompt',sans-serif",
+       '--payg':'linear-gradient(170deg,#7d2348,#4d1430)','--warn-bg':'#fdeef3','--warn-line':'#f0cdd9'} },
+  pro:   { name:'มือถือ แกดเจ็ต พรีเมียม', font:'Kanit:wght@500;600&family=Noto+Sans+Thai:wght@400;500;600',
+    v:{'--brand':'#15b37a','--brand-dark':'#0f8f61','--on-brand':'#05140e','--accent':'#d8b24a','--bg':'#0f1115','--surface':'#191d23',
+       '--sunk':'#23282f','--ink':'#eef1f4','--muted':'#98a1ab','--line':'#2d333b','--r':'14px',
+       '--display':"'Kanit',sans-serif",'--body':"'Noto Sans Thai',sans-serif",
+       '--payg':'linear-gradient(170deg,#1d2a3a,#111823)','--warn-bg':'#2a2416','--warn-line':'#4d421f','--warn-ink':'#f0e2b8'} }
+};
+function applyTheme(){
+  var q = (location.search.match(/[?&]theme=([a-z]+)/) || [])[1];
+  var key = (q && THEMES[q]) ? q : (THEMES[SHOP.theme] ? SHOP.theme : 'suan');
+  var th = THEMES[key]; SHOP._theme = key;
+  var r = document.documentElement;
+  Object.keys(th.v).forEach(function(k){ r.style.setProperty(k, th.v[k]); });
+  if (key !== 'suan'){
+    var l = document.createElement('link'); l.rel = 'stylesheet';
+    l.href = 'https://fonts.googleapis.com/css2?family=' + th.font + '&display=swap';
+    document.head.appendChild(l);
+  }
+  var m = document.querySelector('meta[name=theme-color]');
+  if (!m){ m = document.createElement('meta'); m.name = 'theme-color'; document.head.appendChild(m); }
+  m.content = th.v['--bg'];
+}
+
 var cart = {}, shipIdx = 0, step = 'shop', pIdx = 0, cust = {name:'',phone:'',addr:''}, payWay = 'pp', billNote = '';
 var PR = SHOP.products || [], SH = (SHOP.ship && SHOP.ship.length) ? SHOP.ship : [{n:'ค่าส่ง',p:0}];
 
@@ -507,6 +547,7 @@ document.addEventListener('change', function(ev){
 window.addEventListener('hashchange', function(){ boot(); });
 
 function boot(){
+  applyTheme();
   cart = {}; shipIdx = 0;
   if (readBill()) step = 'bill';
   else if (location.hash === '#admin') step = 'admin';
