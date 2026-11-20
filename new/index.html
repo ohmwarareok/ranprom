@@ -34,7 +34,9 @@ h1{font-family:var(--display);font-weight:700;font-size:clamp(24px,5.6vw,34px);l
 .lead{color:var(--muted);margin:0 0 18px}
 .cols{display:grid;gap:18px}
 @media(min-width:900px){.cols{grid-template-columns:1fr 390px;align-items:start}
-  .right{position:sticky;top:14px}}
+  .right{position:sticky;top:14px}
+  .jumpbtn{display:none}}
+@media(max-width:899px){.bar .st{font-size:12px}.jumpbtn{padding:12px 13px;flex:none}}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px}
 .card h2{font-family:var(--display);font-weight:700;font-size:17px;margin:0 0 3px;display:flex;gap:8px;align-items:center}
 .card h2 i{font-style:normal;width:25px;height:25px;border-radius:50%;background:var(--brand);color:#fff;
@@ -100,7 +102,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:26px 0}
 </div>
 
 <h1>สร้างร้านของคุณเอง</h1>
-<p class="lead">กรอกทางซ้าย หน้าร้านทางขวาเปลี่ยนตามทันที ฟรี ไม่ต้องสมัครอะไร ไม่ต้องใส่รหัสผ่านใด ๆ</p>
+<p class="lead">กรอกไป หน้าร้านเปลี่ยนตามทันที ฟรี ไม่ต้องสมัครอะไร ไม่ต้องใส่รหัสผ่านใด ๆ</p>
 
 <div class="cols">
 <div class="left">
@@ -175,6 +177,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:26px 0}
 
 <div class="bar"><div class="in">
   <div class="st" id="status">เริ่มจากใส่ชื่อร้าน</div>
+  <button class="btn btn-g jumpbtn" id="jump">👁 ดูร้าน</button>
   <button class="btn btn-p" id="dl2">📦 โหลดไฟล์ร้าน</button>
 </div></div>
 
@@ -408,6 +411,9 @@ document.getElementById('addprod').addEventListener('click', function(){
 });
 document.getElementById('dl').addEventListener('click', download);
 document.getElementById('dl2').addEventListener('click', download);
+document.getElementById('jump').addEventListener('click', function(){
+  document.querySelector('.right').scrollIntoView({behavior:'smooth', block:'center'});
+});
 document.getElementById('openfull').addEventListener('click', function(){
   if (pvBlob) window.open(pvBlob, '_blank', 'noopener');
 });
