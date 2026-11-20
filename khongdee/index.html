@@ -605,7 +605,7 @@ function slipVerdict(){
     rows += '<div class="kv"><span class="k">วันที่โอน</span><span class="v">'+esc(i.date.slice(0,2)+'/'+i.date.slice(2,4)+'/'+i.date.slice(4))+'</span></div>';
   if (slipS.dup){
     return '<div class="vd bad"><div class="vt">🚨 สลิปนี้เคยใช้แล้ว</div>'+
-      '<div class="vs">มึงเคยบันทึกสลิปใบนี้ไว้เมื่อ <b>'+esc(thDate(slipS.dup.at))+'</b>'+
+      '<div class="vs">ร้านนี้เคยบันทึกสลิปใบนี้ไว้แล้วเมื่อ <b>'+esc(thDate(slipS.dup.at))+'</b>'+
       (slipS.dup.amt ? ' ยอด <b>'+baht(slipS.dup.amt)+'</b>' : '')+
       (slipS.dup.note ? ' ('+esc(slipS.dup.note)+')' : '')+
       ' — เป็นการเอาสลิปเก่ามาส่งซ้ำ อย่าเพิ่งส่งของ</div>'+rows+'</div>';
