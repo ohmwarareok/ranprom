@@ -11,13 +11,13 @@
 <meta name="theme-color" content="#0e8a5f">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<link id="fontlink" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@600;700&family=Niramit:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
   --brand:#0e8a5f; --brand-dark:#0a6e4b; --accent:#e09200;
   --bg:#f4f5f3; --surface:#fff; --sunk:#f0f1ef;
   --ink:#161c19; --muted:#6a7470; --line:#e2e5e2;
-  --r:18px; --display:'Bai Jamjuree',sans-serif; --body:'IBM Plex Sans Thai',sans-serif;
+  --r:18px; --display:'Anuphan',sans-serif; --body:'Niramit',sans-serif;
   --pad:max(18px, env(safe-area-inset-left));
 }
 *{box-sizing:border-box}
@@ -101,6 +101,16 @@ details p{margin:10px 0 0;color:var(--muted);font-size:14.3px}
 .final p{margin:0 0 18px;opacity:.92;font-size:15px}
 .final .btn-g{background:#fff;border-color:#fff}
 footer{text-align:center;color:var(--muted);font-size:13px;padding:30px 0 40px}
+/* แถบลองฟอนต์ — โชว์เฉพาะตอนต่อท้าย URL ว่า #fonts (ลูกค้าทั่วไปไม่เห็น) */
+#fontbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:50;background:#161c19;color:#fff;
+  padding:10px max(12px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-bottom));
+  box-shadow:0 -6px 24px rgba(0,0,0,.25)}
+#fontbar.on{display:block}
+#fontbar .ft{font-size:12px;opacity:.65;margin-bottom:7px}
+#fontbar .fl{display:flex;gap:7px;overflow-x:auto;padding-bottom:2px}
+#fontbar button{flex:none;background:#2a322e;color:#fff;border:1px solid #3c453f;border-radius:999px;
+  padding:8px 14px;font-size:13.5px;font-family:var(--body);cursor:pointer;white-space:nowrap}
+#fontbar button[aria-pressed=true]{background:#fff;color:#161c19;border-color:#fff;font-weight:600}
 </style>
 </head>
 <body>
@@ -212,6 +222,8 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:30px 0 40px}
   <footer>ร้านพร้อม · หน้าร้านออนไลน์สำเร็จรูปสำหรับแม่ค้าไทย</footer>
 </div>
 
+<div id="fontbar"><div class="ft">ลองฟอนต์หน้าขาย (เห็นเฉพาะเราที่ต่อท้าย URL ว่า #fonts)</div><div class="fl" id="fontlist"></div></div>
+
 <script>
 var pv = document.getElementById('pv');
 document.getElementById('th').addEventListener('click', function(e){
@@ -219,6 +231,56 @@ document.getElementById('th').addEventListener('click', function(e){
   [].forEach.call(this.querySelectorAll('.tbtn'), function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
   pv.src = 'khongdee/?theme=' + b.getAttribute('data-t');
 });
+
+/* ฟอนต์หน้าขาย — ตัวที่ไม่ได้ใช้ในธีมร้าน จะได้ไม่เหมือนร้านลูกค้า */
+var FONTS = {
+  anuphan: {n:'Anuphan + Niramit', d:"'Anuphan',sans-serif",  b:"'Niramit',sans-serif",
+            f:'Anuphan:wght@600;700&family=Niramit:wght@400;500'},
+  serif:   {n:'Trirong (หัวข้อมีเชิง)', d:"'Trirong',serif",  b:"'Sarabun',sans-serif",
+            f:'Trirong:wght@600;700&family=Sarabun:wght@400;500'},
+  looped:  {n:'หัวกลม Looped',  d:"'IBM Plex Sans Thai Looped',sans-serif", b:"'Noto Sans Thai Looped',sans-serif",
+            f:'IBM+Plex+Sans+Thai+Looped:wght@600;700&family=Noto+Sans+Thai+Looped:wght@400;500'},
+  tech:    {n:'Chakra Petch (เทค)', d:"'Chakra Petch',sans-serif", b:"'Noto Sans Thai',sans-serif",
+            f:'Chakra+Petch:wght@600;700&family=Noto+Sans+Thai:wght@400;500'},
+  koho:    {n:'KoHo + Krub',   d:"'KoHo',sans-serif",     b:"'Krub',sans-serif",
+            f:'KoHo:wght@600;700&family=Krub:wght@400;500'},
+  jam:     {n:'Bai Jamjuree (ของเดิม)', d:"'Bai Jamjuree',sans-serif", b:"'IBM Plex Sans Thai',sans-serif",
+            f:'Bai+Jamjuree:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600'},
+  kanit:   {n:'Kanit (ที่คนไทยใช้เยอะ)', d:"'Kanit',sans-serif", b:"'Sarabun',sans-serif",
+            f:'Kanit:wght@600&family=Sarabun:wght@400;500'}
+};
+var DEF = 'anuphan';
+
+function applyFont(key){
+  var f = FONTS[key] || FONTS[DEF];
+  document.getElementById('fontlink').href =
+    'https://fonts.googleapis.com/css2?family=' + f.f + '&display=swap';
+  var r = document.documentElement;
+  r.style.setProperty('--display', f.d);
+  r.style.setProperty('--body', f.b);
+  [].forEach.call(document.querySelectorAll('#fontlist button'), function(x){
+    x.setAttribute('aria-pressed', x.getAttribute('data-f') === key ? 'true' : 'false');
+  });
+}
+
+(function(){
+  var list = document.getElementById('fontlist'), bar = document.getElementById('fontbar');
+  Object.keys(FONTS).forEach(function(k){
+    var b = document.createElement('button');
+    b.setAttribute('data-f', k);
+    b.textContent = FONTS[k].n;
+    list.appendChild(b);
+  });
+  list.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return;
+    applyFont(b.getAttribute('data-f'));
+  });
+  var q = (location.search.match(/[?&]font=([a-z]+)/) || [])[1];
+  if (q && FONTS[q]) applyFont(q); else applyFont(DEF);
+  function bars(){ bar.className = (location.hash === '#fonts' || q) ? 'on' : ''; }
+  bars();
+  window.addEventListener('hashchange', bars);
+})();
 </script>
 </body>
 </html>
